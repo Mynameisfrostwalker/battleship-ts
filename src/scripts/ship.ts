@@ -1,0 +1,47 @@
+type ShipNames =
+  | "carrier"
+  | "battleship"
+  | "cruiser"
+  | "submarine"
+  | "destroyer";
+
+interface Ship {
+  name: ShipNames;
+  length: number;
+  get(num?: number): ShipNames | "hit" | (ShipNames | "hit")[];
+  hit(num: number): void;
+  isSunk(): boolean;
+}
+
+const createShip = (name: ShipNames): Ship => {
+  const shipArray: (ShipNames | "hit")[] = [];
+
+  const shipLengths = {
+    carrier: 5,
+    battleship: 4,
+    cruiser: 3,
+    submarine: 3,
+    destroyer: 2,
+  };
+
+  for (let i = 1; i <= shipLengths[name]; i += 1) {
+    shipArray.push(name);
+  }
+
+  const get = (num?: number) =>
+    num !== undefined && num >= 0 && num < shipLengths[name]
+      ? shipArray[num]
+      : shipArray;
+
+  const hit = (num: number) => {
+    if (num >= 0 && num < shipLengths[name]) {
+      shipArray[num] = "hit";
+    }
+  };
+
+  const isSunk = () => shipArray.every((value) => value === "hit");
+
+  return { name, length: shipLengths[name], get, hit, isSunk };
+};
+
+export default createShip;

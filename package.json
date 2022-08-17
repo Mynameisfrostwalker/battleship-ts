@@ -8,7 +8,7 @@
     "start": "webpack serve --open",
     "build": "webpack",
     "watch": "webpack --watch",
-    "testWatch": "jest --watch *.ts"
+    "testWatch": "jest --watch ./src/tests/*.ts"
   },
   "repository": {
     "type": "git",
