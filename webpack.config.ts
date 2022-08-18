@@ -13,6 +13,8 @@ const config: Configuration = {
   entry: {
     index: "./src/scripts/index.ts",
     ship: "./src/scripts/ship.ts",
+    gameboard: "./src/scripts/gameboard.ts",
+    cell: "./src/scripts/cell.ts",
   },
   module: {
     rules: [
