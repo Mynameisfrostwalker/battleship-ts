@@ -46,5 +46,5 @@ const createShip = (name: ShipNames): Ship => {
   return { name, length: shipLengths[name], get, hit, isSunk };
 };
 
-export type { ShipValues, ShipNames };
+export type { ShipValues, ShipNames, Ship };
 export default createShip;

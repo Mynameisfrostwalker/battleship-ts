@@ -1,5 +1,6 @@
-import type { ShipNames } from "./ship";
-import type { BoardValues } from "./gameboard";
+import type { ShipNames, ShipValues } from "./ship";
+
+type BoardValues = ShipValues | "empty";
 
 interface Cell {
   readonly coords: [number, number];
@@ -22,4 +23,5 @@ const createCell = (
   left: null,
 });
 
+export type { Cell };
 export default createCell;
