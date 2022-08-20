@@ -17,7 +17,7 @@ describe("Create cell object", () => {
     }
   });
 
-  test("Creates carrier cell", () => {
+  test("Creates battleship cell", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         const battleshipCell = createCell([i, j], "battleship");
@@ -33,7 +33,7 @@ describe("Create cell object", () => {
     }
   });
 
-  test("Creates carrier cell", () => {
+  test("Creates cruiser cell", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         const cruiserCell = createCell([i, j], "cruiser");
@@ -49,7 +49,7 @@ describe("Create cell object", () => {
     }
   });
 
-  test("Creates carrier cell", () => {
+  test("Creates submarine cell", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         const submarineCell = createCell([i, j], "submarine");
@@ -65,7 +65,7 @@ describe("Create cell object", () => {
     }
   });
 
-  test("Creates carrier cell", () => {
+  test("Creates destroyer cell", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         const destroyerCell = createCell([i, j], "destroyer");
