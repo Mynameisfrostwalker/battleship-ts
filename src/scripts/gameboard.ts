@@ -7,12 +7,10 @@ type Axis = "horizontal" | "vertical";
 
 interface Gameboard {
   board: Cell[];
-  placeShip: (ship: ShipNames, coords: [number, number], axis: Axis) => void;
+  placeShip: (ship: Ship, coords: [number, number], axis: Axis) => void;
 }
 
 const createGameboard = (): Gameboard => {
-  const shipStore: [Ship, [number, number]][] = [];
-
   const shipLengths = {
     carrier: 5,
     battleship: 4,
@@ -61,21 +59,17 @@ const createGameboard = (): Gameboard => {
     }
   }
 
-  const placeShip = (
-    shipName: ShipNames,
-    coords: [number, number],
-    axis: Axis
-  ) => {
+  const placeShip = (ship: Ship, coords: [number, number], axis: Axis) => {
     if (axis === "horizontal") {
       gameBoardArr.forEach((cell) => {
         if (cell.coords[1] === coords[1]) {
           if (
             cell.coords[0] >= coords[0] &&
-            cell.coords[0] < coords[0] + shipLengths[shipName]
+            cell.coords[0] < coords[0] + shipLengths[ship.name] &&
+            coords[0] + shipLengths[ship.name] < 10
           ) {
-            const ship = createShip(shipName);
-            shipStore.push([ship, coords]);
-            cell.value = shipName;
+            cell.value = ship;
+            cell.position = coords[0] - cell.coords[0];
           }
         }
       });
@@ -84,9 +78,11 @@ const createGameboard = (): Gameboard => {
         if (cell.coords[0] === coords[0]) {
           if (
             cell.coords[1] >= coords[1] &&
-            cell.coords[1] < coords[1] + shipLengths[shipName]
+            cell.coords[1] < coords[1] + shipLengths[ship.name] &&
+            coords[1] + shipLengths[ship.name] < 10
           ) {
-            cell.value = shipName;
+            cell.value = ship;
+            cell.position = coords[1] - cell.coords[1];
           }
         }
       });
