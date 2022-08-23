@@ -1,4 +1,4 @@
-import type { Ship } from "../scripts/ship";
+import type { Ship, ShipNames } from "../scripts/ship";
 import type { Cell } from "../scripts/cell";
 import createGameboard from "../scripts/gameboard";
 import createShip from "../scripts/ship";
@@ -103,11 +103,17 @@ describe("PlaceShip method places horizontal ships on correct coordinates only",
     destroyer: 2,
   };
 
-  const checkIfPlaced = (cell: Cell, x: number, y: number, ship: Ship) => {
+  const checkIfPlaced = (
+    cell: Cell,
+    x: number,
+    y: number,
+    ship: unknown,
+    shipName: ShipNames
+  ) => {
     if (cell.coords[1] === y) {
-      if (cell.coords[0] >= x && cell.coords[0] < x + shipLengths[ship.name]) {
+      if (cell.coords[0] >= x && cell.coords[0] < x + shipLengths[shipName]) {
         expect(cell.value).toBe(ship);
-        expect(cell.position).toBe(x - cell.coords[0]);
+        expect(cell.position).toBe(cell.coords[0] - x);
       } else {
         expect(cell.value).toBe("empty");
         expect(cell.position).toBeNull();
@@ -125,15 +131,22 @@ describe("PlaceShip method places horizontal ships on correct coordinates only",
   test("Carrier placeShip method works", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
-        const carrier = createShip("carrier");
-        gameboard.placeShip(carrier, [i, j], "horizontal");
+        gameboard.placeShip(mockCreateShip, [i, j], "horizontal", "carrier");
+        expect(mockCreateShip).toHaveBeenCalledWith("carrier");
         gameboard.board.forEach((cell) => {
-          if (i + shipLengths.carrier >= 10) {
+          if (i + shipLengths.carrier > 10) {
             checkWhenNoSpace(cell);
             return;
           }
-          checkIfPlaced(cell, i, j, carrier);
+          checkIfPlaced(
+            cell,
+            i,
+            j,
+            mockCreateShip.mock.results[0].value,
+            "carrier"
+          );
         });
       }
     }
@@ -142,15 +155,22 @@ describe("PlaceShip method places horizontal ships on correct coordinates only",
   test("Battleship placeShip method works", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
-        const battleship = createShip("battleship");
-        gameboard.placeShip(battleship, [i, j], "horizontal");
+        gameboard.placeShip(mockCreateShip, [i, j], "horizontal", "battleship");
+        expect(mockCreateShip).toHaveBeenCalledWith("battleship");
         gameboard.board.forEach((cell) => {
-          if (i + shipLengths.battleship >= 10) {
+          if (i + shipLengths.battleship > 10) {
             checkWhenNoSpace(cell);
             return;
           }
-          checkIfPlaced(cell, i, j, battleship);
+          checkIfPlaced(
+            cell,
+            i,
+            j,
+            mockCreateShip.mock.results[0].value,
+            "battleship"
+          );
         });
       }
     }
@@ -159,15 +179,22 @@ describe("PlaceShip method places horizontal ships on correct coordinates only",
   test("Cruiser placeShip method works", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
-        const cruiser = createShip("cruiser");
-        gameboard.placeShip(cruiser, [i, j], "horizontal");
+        gameboard.placeShip(mockCreateShip, [i, j], "horizontal", "cruiser");
+        expect(mockCreateShip).toHaveBeenCalledWith("cruiser");
         gameboard.board.forEach((cell) => {
-          if (i + shipLengths.cruiser >= 10) {
+          if (i + shipLengths.cruiser > 10) {
             checkWhenNoSpace(cell);
             return;
           }
-          checkIfPlaced(cell, i, j, cruiser);
+          checkIfPlaced(
+            cell,
+            i,
+            j,
+            mockCreateShip.mock.results[0].value,
+            "cruiser"
+          );
         });
       }
     }
@@ -176,15 +203,22 @@ describe("PlaceShip method places horizontal ships on correct coordinates only",
   test("Submarine placeShip method works", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
-        const submarine = createShip("submarine");
-        gameboard.placeShip(submarine, [i, j], "horizontal");
+        gameboard.placeShip(mockCreateShip, [i, j], "horizontal", "submarine");
+        expect(mockCreateShip).toHaveBeenCalledWith("submarine");
         gameboard.board.forEach((cell) => {
-          if (i + shipLengths.submarine >= 10) {
+          if (i + shipLengths.submarine > 10) {
             checkWhenNoSpace(cell);
             return;
           }
-          checkIfPlaced(cell, i, j, submarine);
+          checkIfPlaced(
+            cell,
+            i,
+            j,
+            mockCreateShip.mock.results[0].value,
+            "submarine"
+          );
         });
       }
     }
@@ -193,15 +227,22 @@ describe("PlaceShip method places horizontal ships on correct coordinates only",
   test("Destroyer placeShip method works", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
-        const destroyer = createShip("destroyer");
-        gameboard.placeShip(destroyer, [i, j], "horizontal");
+        gameboard.placeShip(mockCreateShip, [i, j], "horizontal", "destroyer");
+        expect(mockCreateShip).toHaveBeenCalledWith("destroyer");
         gameboard.board.forEach((cell) => {
-          if (i + shipLengths.destroyer >= 10) {
+          if (i + shipLengths.destroyer > 10) {
             checkWhenNoSpace(cell);
             return;
           }
-          checkIfPlaced(cell, i, j, destroyer);
+          checkIfPlaced(
+            cell,
+            i,
+            j,
+            mockCreateShip.mock.results[0].value,
+            "destroyer"
+          );
         });
       }
     }
@@ -217,11 +258,17 @@ describe("PlaceShip method places vertical ships on correct coordinates only", (
     destroyer: 2,
   };
 
-  const checkIfPlaced = (cell: Cell, x: number, y: number, ship: Ship) => {
+  const checkIfPlaced = (
+    cell: Cell,
+    x: number,
+    y: number,
+    ship: unknown,
+    shipName: ShipNames
+  ) => {
     if (cell.coords[0] === x) {
-      if (cell.coords[1] >= y && cell.coords[1] < y + shipLengths[ship.name]) {
+      if (cell.coords[1] >= y && cell.coords[1] < y + shipLengths[shipName]) {
         expect(cell.value).toBe(ship);
-        expect(cell.position).toBe(y - cell.coords[1]);
+        expect(cell.position).toBe(cell.coords[1] - y);
       } else {
         expect(cell.value).toBe("empty");
         expect(cell.position).toBeNull();
@@ -239,15 +286,22 @@ describe("PlaceShip method places vertical ships on correct coordinates only", (
   test("Carrier placeShip method works", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
-        const carrier = createShip("carrier");
-        gameboard.placeShip(carrier, [i, j], "vertical");
+        gameboard.placeShip(mockCreateShip, [i, j], "vertical", "carrier");
+        expect(mockCreateShip).toHaveBeenCalledWith("carrier");
         gameboard.board.forEach((cell) => {
-          if (j + shipLengths.carrier >= 10) {
+          if (j + shipLengths.carrier > 10) {
             checkWhenNoSpace(cell);
             return;
           }
-          checkIfPlaced(cell, i, j, carrier);
+          checkIfPlaced(
+            cell,
+            i,
+            j,
+            mockCreateShip.mock.results[0].value,
+            "carrier"
+          );
         });
       }
     }
@@ -256,15 +310,22 @@ describe("PlaceShip method places vertical ships on correct coordinates only", (
   test("Battleship placeShip method works", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
-        const battleship = createShip("battleship");
-        gameboard.placeShip(battleship, [i, j], "vertical");
+        gameboard.placeShip(mockCreateShip, [i, j], "vertical", "battleship");
+        expect(mockCreateShip).toHaveBeenCalledWith("battleship");
         gameboard.board.forEach((cell) => {
-          if (j + shipLengths.battleship >= 10) {
+          if (j + shipLengths.battleship > 10) {
             checkWhenNoSpace(cell);
             return;
           }
-          checkIfPlaced(cell, i, j, battleship);
+          checkIfPlaced(
+            cell,
+            i,
+            j,
+            mockCreateShip.mock.results[0].value,
+            "battleship"
+          );
         });
       }
     }
@@ -273,15 +334,22 @@ describe("PlaceShip method places vertical ships on correct coordinates only", (
   test("Cruiser placeShip method works", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
-        const cruiser = createShip("cruiser");
-        gameboard.placeShip(cruiser, [i, j], "vertical");
+        gameboard.placeShip(mockCreateShip, [i, j], "vertical", "cruiser");
+        expect(mockCreateShip).toHaveBeenCalledWith("cruiser");
         gameboard.board.forEach((cell) => {
-          if (j + shipLengths.cruiser >= 10) {
+          if (j + shipLengths.cruiser > 10) {
             checkWhenNoSpace(cell);
             return;
           }
-          checkIfPlaced(cell, i, j, cruiser);
+          checkIfPlaced(
+            cell,
+            i,
+            j,
+            mockCreateShip.mock.results[0].value,
+            "cruiser"
+          );
         });
       }
     }
@@ -290,15 +358,22 @@ describe("PlaceShip method places vertical ships on correct coordinates only", (
   test("Submarine placeShip method works", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
-        const submarine = createShip("submarine");
-        gameboard.placeShip(submarine, [i, j], "vertical");
+        gameboard.placeShip(mockCreateShip, [i, j], "vertical", "submarine");
+        expect(mockCreateShip).toHaveBeenCalledWith("submarine");
         gameboard.board.forEach((cell) => {
-          if (j + shipLengths.submarine >= 10) {
+          if (j + shipLengths.submarine > 10) {
             checkWhenNoSpace(cell);
             return;
           }
-          checkIfPlaced(cell, i, j, submarine);
+          checkIfPlaced(
+            cell,
+            i,
+            j,
+            mockCreateShip.mock.results[0].value,
+            "submarine"
+          );
         });
       }
     }
@@ -307,15 +382,240 @@ describe("PlaceShip method places vertical ships on correct coordinates only", (
   test("Destroyer placeShip method works", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
-        const destroyer = createShip("destroyer");
-        gameboard.placeShip(destroyer, [i, j], "vertical");
+        gameboard.placeShip(mockCreateShip, [i, j], "vertical", "destroyer");
+        expect(mockCreateShip).toHaveBeenCalledWith("destroyer");
         gameboard.board.forEach((cell) => {
-          if (j + shipLengths.destroyer >= 10) {
+          if (j + shipLengths.destroyer > 10) {
             checkWhenNoSpace(cell);
             return;
           }
-          checkIfPlaced(cell, i, j, destroyer);
+          checkIfPlaced(
+            cell,
+            i,
+            j,
+            mockCreateShip.mock.results[0].value,
+            "destroyer"
+          );
+        });
+      }
+    }
+  });
+});
+
+describe("Hit method works changes value returned by horizontal ship get method to hit", () => {
+  const shipLengths = {
+    carrier: 5,
+    battleship: 4,
+    cruiser: 3,
+    submarine: 3,
+    destroyer: 2,
+  };
+
+  const checkIfHit = (
+    cell: Cell,
+    x: number,
+    y: number,
+    shipName: ShipNames
+  ) => {
+    if (cell.coords[1] === y) {
+      if (
+        cell.coords[0] >= x &&
+        cell.coords[0] < x + shipLengths[shipName] &&
+        x + shipLengths[shipName] <= 10
+      ) {
+        expect(cell.value).not.toBe("empty");
+        expect(cell.value).not.toBe("hit");
+        if (
+          cell.value !== "empty" &&
+          cell.value !== "hit" &&
+          cell.position !== null
+        ) {
+          expect(cell.value.get(cell.position)).toBe("hit");
+        }
+      } else {
+        expect(cell.value).toBe("hit");
+      }
+    } else {
+      expect(cell.value).toBe("hit");
+    }
+  };
+
+  test("Carrier hit method works", () => {
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
+        const gameboard = createGameboard();
+        gameboard.placeShip(mockCreateShip, [i, j], "horizontal", "carrier");
+        gameboard.board.forEach((cell) => {
+          gameboard.receiveAttack(cell.coords);
+          checkIfHit(cell, i, j, "carrier");
+        });
+      }
+    }
+  });
+
+  test("Battleship hit method works", () => {
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
+        const gameboard = createGameboard();
+        gameboard.placeShip(mockCreateShip, [i, j], "horizontal", "battleship");
+        gameboard.board.forEach((cell) => {
+          gameboard.receiveAttack(cell.coords);
+          checkIfHit(cell, i, j, "battleship");
+        });
+      }
+    }
+  });
+
+  test("Cruiser hit method works", () => {
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
+        const gameboard = createGameboard();
+        gameboard.placeShip(mockCreateShip, [i, j], "horizontal", "cruiser");
+        gameboard.board.forEach((cell) => {
+          gameboard.receiveAttack(cell.coords);
+          checkIfHit(cell, i, j, "cruiser");
+        });
+      }
+    }
+  });
+
+  test("Submarine hit method works", () => {
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
+        const gameboard = createGameboard();
+        gameboard.placeShip(mockCreateShip, [i, j], "horizontal", "submarine");
+        gameboard.board.forEach((cell) => {
+          gameboard.receiveAttack(cell.coords);
+          checkIfHit(cell, i, j, "submarine");
+        });
+      }
+    }
+  });
+
+  test("Destroyer hit method works", () => {
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
+        const gameboard = createGameboard();
+        gameboard.placeShip(mockCreateShip, [i, j], "horizontal", "destroyer");
+        gameboard.board.forEach((cell) => {
+          gameboard.receiveAttack(cell.coords);
+          checkIfHit(cell, i, j, "destroyer");
+        });
+      }
+    }
+  });
+});
+
+describe("Hit method works changes value returned by vertical ship get method to hit", () => {
+  const shipLengths = {
+    carrier: 5,
+    battleship: 4,
+    cruiser: 3,
+    submarine: 3,
+    destroyer: 2,
+  };
+
+  const checkIfHit = (
+    cell: Cell,
+    x: number,
+    y: number,
+    shipName: ShipNames
+  ) => {
+    if (cell.coords[0] === x) {
+      if (
+        cell.coords[1] >= y &&
+        cell.coords[1] < y + shipLengths[shipName] &&
+        y + shipLengths[shipName] <= 10
+      ) {
+        expect(cell.value).not.toBe("empty");
+        expect(cell.value).not.toBe("hit");
+        if (
+          cell.value !== "empty" &&
+          cell.value !== "hit" &&
+          cell.position !== null
+        ) {
+          expect(cell.value.get(cell.position)).toBe("hit");
+        }
+      } else {
+        expect(cell.value).toBe("hit");
+      }
+    } else {
+      expect(cell.value).toBe("hit");
+    }
+  };
+
+  test("Carrier hit method works", () => {
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
+        const gameboard = createGameboard();
+        gameboard.placeShip(mockCreateShip, [i, j], "vertical", "carrier");
+        gameboard.board.forEach((cell) => {
+          gameboard.receiveAttack(cell.coords);
+          checkIfHit(cell, i, j, "carrier");
+        });
+      }
+    }
+  });
+
+  test("Battleship hit method works", () => {
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
+        const gameboard = createGameboard();
+        gameboard.placeShip(mockCreateShip, [i, j], "vertical", "battleship");
+        gameboard.board.forEach((cell) => {
+          gameboard.receiveAttack(cell.coords);
+          checkIfHit(cell, i, j, "battleship");
+        });
+      }
+    }
+  });
+
+  test("Cruiser hit method works", () => {
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
+        const gameboard = createGameboard();
+        gameboard.placeShip(mockCreateShip, [i, j], "vertical", "cruiser");
+        gameboard.board.forEach((cell) => {
+          gameboard.receiveAttack(cell.coords);
+          checkIfHit(cell, i, j, "cruiser");
+        });
+      }
+    }
+  });
+
+  test("Submarine hit method works", () => {
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
+        const gameboard = createGameboard();
+        gameboard.placeShip(mockCreateShip, [i, j], "vertical", "submarine");
+        gameboard.board.forEach((cell) => {
+          gameboard.receiveAttack(cell.coords);
+          checkIfHit(cell, i, j, "submarine");
+        });
+      }
+    }
+  });
+
+  test("Destroyer hit method works", () => {
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        const mockCreateShip = jest.fn(createShip);
+        const gameboard = createGameboard();
+        gameboard.placeShip(mockCreateShip, [i, j], "vertical", "destroyer");
+        gameboard.board.forEach((cell) => {
+          gameboard.receiveAttack(cell.coords);
+          checkIfHit(cell, i, j, "destroyer");
         });
       }
     }

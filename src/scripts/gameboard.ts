@@ -7,7 +7,13 @@ type Axis = "horizontal" | "vertical";
 
 interface Gameboard {
   board: Cell[];
-  placeShip: (ship: Ship, coords: [number, number], axis: Axis) => void;
+  placeShip: (
+    shipFactory: (name: ShipNames) => Ship,
+    coords: [number, number],
+    axis: Axis,
+    shipName: ShipNames
+  ) => void;
+  receiveAttack: (coords: [number, number]) => void;
 }
 
 const createGameboard = (): Gameboard => {
@@ -59,17 +65,23 @@ const createGameboard = (): Gameboard => {
     }
   }
 
-  const placeShip = (ship: Ship, coords: [number, number], axis: Axis) => {
+  const placeShip = (
+    shipFactory: (name: ShipNames) => Ship,
+    coords: [number, number],
+    axis: Axis,
+    shipName: ShipNames
+  ) => {
+    const ship = shipFactory(shipName);
     if (axis === "horizontal") {
       gameBoardArr.forEach((cell) => {
         if (cell.coords[1] === coords[1]) {
           if (
             cell.coords[0] >= coords[0] &&
-            cell.coords[0] < coords[0] + shipLengths[ship.name] &&
-            coords[0] + shipLengths[ship.name] < 10
+            cell.coords[0] < coords[0] + shipLengths[shipName] &&
+            coords[0] + shipLengths[shipName] - 1 < 10
           ) {
             cell.value = ship;
-            cell.position = coords[0] - cell.coords[0];
+            cell.position = cell.coords[0] - coords[0];
           }
         }
       });
@@ -78,18 +90,35 @@ const createGameboard = (): Gameboard => {
         if (cell.coords[0] === coords[0]) {
           if (
             cell.coords[1] >= coords[1] &&
-            cell.coords[1] < coords[1] + shipLengths[ship.name] &&
-            coords[1] + shipLengths[ship.name] < 10
+            cell.coords[1] < coords[1] + shipLengths[shipName] &&
+            coords[1] + shipLengths[shipName] - 1 < 10
           ) {
             cell.value = ship;
-            cell.position = coords[1] - cell.coords[1];
+            cell.position = cell.coords[1] - coords[1];
           }
         }
       });
     }
   };
 
-  return { board: gameBoardArr, placeShip };
+  const receiveAttack = (coords: [number, number]) => {
+    const cell = gameBoardArr.find((obj) => {
+      if (obj.coords[0] === coords[0] && obj.coords[1] === coords[1]) {
+        return true;
+      }
+      return false;
+    });
+
+    if (cell?.value === "empty") {
+      cell.value = "hit";
+    }
+
+    if (cell?.value !== "hit" && cell?.position !== null) {
+      cell?.value.hit(cell?.position);
+    }
+  };
+
+  return { board: gameBoardArr, placeShip, receiveAttack };
 };
 
 export default createGameboard;

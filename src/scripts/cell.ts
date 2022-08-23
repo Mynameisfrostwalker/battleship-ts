@@ -1,10 +1,15 @@
 import type { Ship } from "./ship";
 
-type BoardValues = Ship | "empty";
+type BoardValues = Ship | "empty" | "hit";
 
 interface Cell {
   readonly coords: [number, number];
   value: BoardValues;
+  /*
+  Position denotes what area of ship is located on cell. 
+  Null means no ship;
+  0 means front of ship;
+  */
   position: null | number;
   top: Cell | null;
   right: Cell | null;
