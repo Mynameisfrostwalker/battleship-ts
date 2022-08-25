@@ -14,9 +14,11 @@ interface Gameboard {
     shipName: ShipNames
   ) => void;
   receiveAttack: (coords: [number, number]) => void;
+  areAllSunk: () => void;
 }
 
 const createGameboard = (): Gameboard => {
+  const shipStore: Ship[] = [];
   const shipLengths = {
     carrier: 5,
     battleship: 4,
@@ -65,6 +67,38 @@ const createGameboard = (): Gameboard => {
     }
   }
 
+  const getAvailableSpots = () => {};
+
+  const checkIfShipNotInCells = (
+    coords: [number, number],
+    axis: Axis,
+    shipName: ShipNames
+  ) => {
+    const length = shipLengths[shipName];
+    let cell = gameBoardArr.find(
+      (obj) => obj.coords[0] === coords[0] && obj.coords[1] === coords[1]
+    );
+    const arr: Cell[] = [];
+
+    if (axis === "horizontal") {
+      for (let i = 0; i < length; i += 1) {
+        if (cell) {
+          arr.push(cell);
+          cell = cell.right || undefined;
+        }
+      }
+    } else if (axis === "vertical") {
+      for (let i = 0; i < length; i += 1) {
+        if (cell) {
+          arr.push(cell);
+          cell = cell.bottom || undefined;
+        }
+      }
+    }
+
+    return arr.every((obj) => obj.value === "empty");
+  };
+
   const placeShip = (
     shipFactory: (name: ShipNames) => Ship,
     coords: [number, number],
@@ -72,15 +106,19 @@ const createGameboard = (): Gameboard => {
     shipName: ShipNames
   ) => {
     const ship = shipFactory(shipName);
+    if (!checkIfShipNotInCells(coords, axis, shipName)) {
+      return;
+    }
     if (axis === "horizontal") {
       gameBoardArr.forEach((cell) => {
         if (cell.coords[1] === coords[1]) {
           if (
             cell.coords[0] >= coords[0] &&
             cell.coords[0] < coords[0] + shipLengths[shipName] &&
-            coords[0] + shipLengths[shipName] - 1 < 10
+            coords[0] + shipLengths[shipName] <= 10
           ) {
             cell.value = ship;
+            shipStore.push(ship);
             cell.position = cell.coords[0] - coords[0];
           }
         }
@@ -91,9 +129,10 @@ const createGameboard = (): Gameboard => {
           if (
             cell.coords[1] >= coords[1] &&
             cell.coords[1] < coords[1] + shipLengths[shipName] &&
-            coords[1] + shipLengths[shipName] - 1 < 10
+            coords[1] + shipLengths[shipName] <= 10
           ) {
             cell.value = ship;
+            shipStore.push(ship);
             cell.position = cell.coords[1] - coords[1];
           }
         }
@@ -118,7 +157,9 @@ const createGameboard = (): Gameboard => {
     }
   };
 
-  return { board: gameBoardArr, placeShip, receiveAttack };
+  const areAllSunk = () => shipStore.every((ship) => ship.isSunk());
+
+  return { board: gameBoardArr, placeShip, receiveAttack, areAllSunk };
 };
 
 export default createGameboard;

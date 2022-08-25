@@ -621,3 +621,113 @@ describe("Hit method works changes value returned by vertical ship get method to
     }
   });
 });
+
+// Dont need to test every possible situation!!!! Not practical. Tests will be simpler from now on!
+// T0DO: Refactor previous tests to be simpler.
+
+describe("Two ships can't share same cell", () => {
+  test("Ships do not overlap", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [2, 2], "vertical", "carrier");
+    gameboard.placeShip(mockCreateShip, [1, 3], "horizontal", "battleship");
+    const cell = gameboard.board.find(
+      (obj) => obj.coords[0] === 1 && obj.coords[1] === 3
+    );
+    const cell2 = gameboard.board.find(
+      (obj) => obj.coords[0] === 2 && obj.coords[1] === 3
+    );
+    const cell3 = gameboard.board.find(
+      (obj) => obj.coords[0] === 3 && obj.coords[1] === 3
+    );
+    expect(cell?.value).toBe("empty");
+    expect(cell2?.value).toEqual(mockCreateShip.mock.results[0].value);
+    expect(cell3?.value).toBe("empty");
+  });
+
+  test("Cannot place ship on occupied cell", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [2, 2], "vertical", "submarine");
+    gameboard.placeShip(mockCreateShip, [2, 2], "vertical", "destroyer");
+    const cell = gameboard.board.find(
+      (obj) => obj.coords[0] === 2 && obj.coords[1] === 2
+    );
+    expect(cell?.value).toBe(mockCreateShip.mock.results[0].value);
+  });
+});
+
+describe("areAllSunk function returns true when all ships are sunk", () => {
+  test("works with one ship", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [2, 2], "vertical", "destroyer");
+    gameboard.board.forEach((cell) => {
+      gameboard.receiveAttack(cell.coords);
+    });
+    expect(gameboard.areAllSunk()).toBe(true);
+  });
+
+  test("works with two ships", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [2, 2], "vertical", "destroyer");
+    gameboard.placeShip(mockCreateShip, [4, 2], "horizontal", "submarine");
+    gameboard.board.forEach((cell) => {
+      gameboard.receiveAttack(cell.coords);
+    });
+    expect(gameboard.areAllSunk()).toBe(true);
+  });
+
+  test("works with five ships", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [2, 1], "horizontal", "destroyer");
+    gameboard.placeShip(mockCreateShip, [1, 3], "vertical", "submarine");
+    gameboard.placeShip(mockCreateShip, [4, 3], "vertical", "cruiser");
+    gameboard.placeShip(mockCreateShip, [1, 8], "horizontal", "battleship");
+    gameboard.placeShip(mockCreateShip, [7, 3], "vertical", "carrier");
+    gameboard.board.forEach((cell) => {
+      gameboard.receiveAttack(cell.coords);
+    });
+    expect(gameboard.areAllSunk()).toBe(true);
+  });
+});
+
+describe("areAllSunk function returns false when not all ships are sunk", () => {
+  test("no ship is sunk", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [2, 2], "vertical", "destroyer");
+    expect(gameboard.areAllSunk()).toBe(false);
+  });
+
+  test("when one ship is sunk", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [2, 2], "vertical", "destroyer");
+    gameboard.placeShip(mockCreateShip, [4, 2], "horizontal", "submarine");
+    gameboard.receiveAttack([2, 2]);
+    gameboard.receiveAttack([2, 3]);
+    expect(gameboard.areAllSunk()).toBe(false);
+  });
+
+  test("works with five ships", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [2, 1], "horizontal", "destroyer");
+    gameboard.placeShip(mockCreateShip, [1, 3], "vertical", "submarine");
+    gameboard.placeShip(mockCreateShip, [4, 3], "vertical", "cruiser");
+    gameboard.placeShip(mockCreateShip, [1, 8], "horizontal", "battleship");
+    gameboard.placeShip(mockCreateShip, [7, 3], "vertical", "carrier");
+    gameboard.board.forEach((cell) => {
+      if (cell.value !== "empty" && cell.value !== "hit") {
+        if (cell.value.name === "carrier") {
+          return;
+        }
+      }
+      gameboard.receiveAttack(cell.coords);
+    });
+    expect(gameboard.areAllSunk()).toBe(false);
+  });
+});
