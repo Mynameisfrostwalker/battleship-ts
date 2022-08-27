@@ -1,4 +1,4 @@
-import type { Ship, ShipNames } from "../scripts/ship";
+import type { ShipNames } from "../scripts/ship";
 import type { Cell } from "../scripts/cell";
 import createGameboard from "../scripts/gameboard";
 import createShip from "../scripts/ship";
@@ -22,24 +22,65 @@ describe("CreateGameboard function creates gameboard", () => {
   test("Expect cell in gameboard to have top property", () => {
     for (let i = 0; i < gameboard.board.length; i += 1) {
       expect(gameboard.board[i]).toHaveProperty("top");
+      const top = gameboard.board.find(
+        (cell) =>
+          gameboard.board[i].coords[0] === cell.coords[0] &&
+          gameboard.board[i].coords[1] - 1 === cell.coords[1]
+      );
+      if (gameboard.board[i].coords[1] !== 0) {
+        expect(gameboard.board[i].top?.coords).toBe(top?.coords);
+      } else {
+        expect(gameboard.board[i].top).toBeNull();
+      }
     }
   });
 
   test("Expect cell in gameboard to have right property", () => {
     for (let i = 0; i < gameboard.board.length; i += 1) {
       expect(gameboard.board[i]).toHaveProperty("right");
+
+      const right = gameboard.board.find(
+        (cell) =>
+          gameboard.board[i].coords[0] + 1 === cell.coords[0] &&
+          gameboard.board[i].coords[1] === cell.coords[1]
+      );
+      if (gameboard.board[i].coords[0] !== 9) {
+        expect(gameboard.board[i].right?.coords).toBe(right?.coords);
+      } else {
+        expect(gameboard.board[i].right).toBeNull();
+      }
     }
   });
 
   test("Expect cell in gameboard to have bottom property", () => {
     for (let i = 0; i < gameboard.board.length; i += 1) {
       expect(gameboard.board[i]).toHaveProperty("bottom");
+      const bottom = gameboard.board.find(
+        (cell) =>
+          gameboard.board[i].coords[0] === cell.coords[0] &&
+          gameboard.board[i].coords[1] + 1 === cell.coords[1]
+      );
+      if (gameboard.board[i].coords[1] !== 9) {
+        expect(gameboard.board[i].bottom?.coords).toBe(bottom?.coords);
+      } else {
+        expect(gameboard.board[i].bottom).toBeNull();
+      }
     }
   });
 
   test("Expect cell in gameboard to have left property", () => {
     for (let i = 0; i < gameboard.board.length; i += 1) {
       expect(gameboard.board[i]).toHaveProperty("left");
+      const left = gameboard.board.find(
+        (cell) =>
+          gameboard.board[i].coords[0] - 1 === cell.coords[0] &&
+          gameboard.board[i].coords[1] === cell.coords[1]
+      );
+      if (gameboard.board[i].coords[0] !== 0) {
+        expect(gameboard.board[i].left?.coords).toBe(left?.coords);
+      } else {
+        expect(gameboard.board[i].left).toBeNull();
+      }
     }
   });
 
@@ -53,44 +94,6 @@ describe("CreateGameboard function creates gameboard", () => {
         ).toBeDefined();
       }
     }
-  });
-
-  test("Gameboard array objects are connected to other cells", () => {
-    const checkIfConnectedToCell = (cell: Cell) => {
-      const left =
-        gameboard.board.find(
-          (cell2) =>
-            cell.coords[0] - 1 === cell2.coords[0] &&
-            cell.coords[1] === cell2.coords[1]
-        ) || null;
-      expect(cell.left).toBe(left);
-
-      const right =
-        gameboard.board.find(
-          (cell2) =>
-            cell.coords[0] + 1 === cell2.coords[0] &&
-            cell.coords[1] === cell2.coords[1]
-        ) || null;
-      expect(cell.right).toBe(right);
-
-      const top =
-        gameboard.board.find(
-          (cell2) =>
-            cell.coords[0] === cell2.coords[0] &&
-            cell.coords[1] + 1 === cell2.coords[1]
-        ) || null;
-      expect(cell.top).toBe(top);
-
-      const bottom =
-        gameboard.board.find(
-          (cell2) =>
-            cell.coords[0] === cell2.coords[0] &&
-            cell.coords[1] - 1 === cell2.coords[1]
-        ) || null;
-      expect(cell.bottom).toBe(bottom);
-    };
-
-    gameboard.board.forEach(checkIfConnectedToCell);
   });
 });
 
@@ -729,5 +732,63 @@ describe("areAllSunk function returns false when not all ships are sunk", () => 
       gameboard.receiveAttack(cell.coords);
     });
     expect(gameboard.areAllSunk()).toBe(false);
+  });
+});
+
+describe("getAvailableCoords method returns available coordinates", () => {
+  test("Works with zero ships already placed", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    const availableCoords = gameboard.getAvailableCoords(
+      "horizontal",
+      "cruiser",
+      mockCreateShip
+    );
+    expect(availableCoords).toContainEqual([0, 0]);
+    expect(availableCoords).toContainEqual([3, 4]);
+    expect(availableCoords).not.toContainEqual([9, 5]);
+    expect(availableCoords).not.toContainEqual([8, 8]);
+  });
+
+  test("Works with one ships already placed", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [3, 4], "horizontal", "carrier");
+    const availableCoords = gameboard.getAvailableCoords(
+      "vertical",
+      "battleship",
+      mockCreateShip
+    );
+    expect(availableCoords).toContainEqual([0, 0]);
+    expect(availableCoords).toContainEqual([2, 4]);
+    expect(availableCoords).toContainEqual([1, 2]);
+    expect(availableCoords).toContainEqual([9, 5]);
+    expect(availableCoords).toContainEqual([5, 5]);
+    expect(availableCoords).not.toContainEqual([3, 3]);
+    expect(availableCoords).not.toContainEqual([4, 4]);
+    expect(availableCoords).not.toContainEqual([3, 4]);
+    expect(availableCoords).not.toContainEqual([8, 8]);
+  });
+
+  test("Works with four ships already placed", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [2, 1], "horizontal", "destroyer");
+    gameboard.placeShip(mockCreateShip, [1, 3], "vertical", "carrier");
+    gameboard.placeShip(mockCreateShip, [4, 3], "vertical", "cruiser");
+    gameboard.placeShip(mockCreateShip, [5, 8], "horizontal", "battleship");
+    const availableCoords = gameboard.getAvailableCoords(
+      "vertical",
+      "submarine",
+      mockCreateShip
+    );
+
+    expect(availableCoords).toContainEqual([0, 0]);
+    expect(availableCoords).toContainEqual([2, 4]);
+    expect(availableCoords).toContainEqual([3, 4]);
+    expect(availableCoords).toContainEqual([9, 5]);
+    expect(availableCoords).not.toContainEqual([8, 8]);
+    expect(availableCoords).not.toContainEqual([4, 4]);
+    expect(availableCoords).not.toContainEqual([3, 0]);
   });
 });

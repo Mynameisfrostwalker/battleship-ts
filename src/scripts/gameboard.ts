@@ -1,7 +1,7 @@
+import { cloneDeep } from "lodash";
 import type { Cell } from "./cell";
 import type { ShipNames, Ship } from "./ship";
 import createCell from "./cell";
-import createShip from "./ship";
 
 type Axis = "horizontal" | "vertical";
 
@@ -15,9 +15,14 @@ interface Gameboard {
   ) => void;
   receiveAttack: (coords: [number, number]) => void;
   areAllSunk: () => void;
+  getAvailableCoords: (
+    axis: Axis,
+    shipName: ShipNames,
+    shipFunc: (name: ShipNames) => Ship
+  ) => [number, number][];
 }
 
-const createGameboard = (): Gameboard => {
+const createGameboard = (board?: Cell[]): Gameboard => {
   const shipStore: Ship[] = [];
   const shipLengths = {
     carrier: 5,
@@ -28,13 +33,13 @@ const createGameboard = (): Gameboard => {
   };
 
   const directions = {
-    top: [0, 1],
+    top: [0, -1],
     right: [1, 0],
-    bottom: [0, -1],
+    bottom: [0, 1],
     left: [-1, 0],
   };
 
-  const gameBoardArr: Cell[] = [];
+  let gameBoardArr: Cell[] = [];
 
   for (let i = 0; i < 10; i += 1) {
     for (let j = 0; j < 10; j += 1) {
@@ -42,32 +47,43 @@ const createGameboard = (): Gameboard => {
     }
   }
 
-  const checkIfKey = (
-    key: string,
-    obj: typeof directions
-  ): key is keyof typeof directions => key in obj;
+  if (board === undefined) {
+    const doesMoveExist = (
+      value: Cell,
+      num: number,
+      directionsObj: typeof directions,
+      key: keyof typeof directions
+    ) => {
+      const coords = [...gameBoardArr[num].coords];
+      coords[0] += directionsObj[key][0];
+      coords[1] += directionsObj[key][1];
+      if (value.coords[0] === coords[0] && value.coords[1] === coords[1]) {
+        return true;
+      }
+      return false;
+    };
 
-  for (let i = 0; i < gameBoardArr.length; i += 1) {
-    const keys = Object.keys(directions);
-    for (let j = 0; j < keys.length; j += 1) {
-      const key = keys[j];
-      if (checkIfKey(key, directions)) {
-        const move = gameBoardArr.find((value) => {
-          const coords = [...gameBoardArr[i].coords];
-          coords[0] += directions[key][0];
-          coords[1] += directions[key][1];
-          if (value.coords[0] === coords[0] && value.coords[1] === coords[1]) {
-            return true;
-          }
-          return false;
-        });
+    const checkIfKey = (
+      key: string,
+      obj: typeof directions
+    ): key is keyof typeof directions => key in obj;
 
-        gameBoardArr[i][key] = move || null;
+    for (let i = 0; i < gameBoardArr.length; i += 1) {
+      const keys = Object.keys(directions);
+      for (let j = 0; j < keys.length; j += 1) {
+        const key = keys[j];
+        if (checkIfKey(key, directions)) {
+          const move = gameBoardArr.find((value) =>
+            doesMoveExist(value, i, directions, key)
+          );
+
+          gameBoardArr[i][key] = move || null;
+        }
       }
     }
+  } else {
+    gameBoardArr = cloneDeep(board);
   }
-
-  const getAvailableSpots = () => {};
 
   const checkIfShipNotInCells = (
     coords: [number, number],
@@ -159,7 +175,42 @@ const createGameboard = (): Gameboard => {
 
   const areAllSunk = () => shipStore.every((ship) => ship.isSunk());
 
-  return { board: gameBoardArr, placeShip, receiveAttack, areAllSunk };
+  const getAvailableCoords = function getAvailableCoords(
+    this: Gameboard,
+    axis: Axis,
+    shipName: ShipNames,
+    shipFunc: (name: ShipNames) => Ship
+  ): [number, number][] {
+    const arr: [number, number][] = [];
+    this.board.forEach((cell) => {
+      const gameboard = createGameboard(this.board);
+      gameboard.placeShip(shipFunc, cell.coords, axis, shipName);
+      const placed = gameboard.board.find(
+        (obj) =>
+          obj.coords[0] === cell.coords[0] && obj.coords[1] === cell.coords[1]
+      );
+
+      if (
+        placed?.value !== "hit" &&
+        placed?.value !== "empty" &&
+        placed?.value !== undefined
+      ) {
+        if (placed?.value.name === shipName) {
+          arr.push(cell.coords);
+        }
+      }
+    });
+    return arr;
+  };
+
+  return {
+    board: gameBoardArr,
+    placeShip,
+    receiveAttack,
+    areAllSunk,
+    getAvailableCoords,
+  };
 };
 
+export type { Gameboard };
 export default createGameboard;
