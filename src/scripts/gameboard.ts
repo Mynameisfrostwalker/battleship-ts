@@ -20,6 +20,7 @@ interface Gameboard {
     shipName: ShipNames,
     shipFunc: (name: ShipNames) => Ship
   ) => [number, number][];
+  removeShip: (shipName: ShipNames) => void;
 }
 
 const createGameboard = (board?: Cell[]): Gameboard => {
@@ -203,14 +204,31 @@ const createGameboard = (board?: Cell[]): Gameboard => {
     return arr;
   };
 
+  const removeShip = (shipName: ShipNames) => {
+    shipStore.forEach((ship, ndx) => {
+      if (ship.name === shipName) {
+        shipStore.splice(ndx, 1);
+      }
+    });
+    gameBoardArr.forEach((cell) => {
+      if (cell.value !== "hit" && cell.value !== "empty") {
+        if (cell.value.name === shipName) {
+          cell.value = "empty";
+          cell.position = null;
+        }
+      }
+    });
+  };
+
   return {
     board: gameBoardArr,
     placeShip,
     receiveAttack,
     areAllSunk,
     getAvailableCoords,
+    removeShip,
   };
 };
 
-export type { Gameboard };
+export type { Gameboard, Axis };
 export default createGameboard;

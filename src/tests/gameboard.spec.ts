@@ -286,7 +286,7 @@ describe("PlaceShip method places vertical ships on correct coordinates only", (
     expect(cell.value).toBe("empty");
   };
 
-  test("Carrier placeShip method works", () => {
+  test("PlaceShip method works on carrier", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         const mockCreateShip = jest.fn(createShip);
@@ -310,7 +310,7 @@ describe("PlaceShip method places vertical ships on correct coordinates only", (
     }
   });
 
-  test("Battleship placeShip method works", () => {
+  test("PlaceShip method works on battleship", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         const mockCreateShip = jest.fn(createShip);
@@ -334,7 +334,7 @@ describe("PlaceShip method places vertical ships on correct coordinates only", (
     }
   });
 
-  test("Cruiser placeShip method works", () => {
+  test("PlaceShip method works on cruiser", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         const mockCreateShip = jest.fn(createShip);
@@ -358,7 +358,7 @@ describe("PlaceShip method places vertical ships on correct coordinates only", (
     }
   });
 
-  test("Submarine placeShip method works", () => {
+  test("PlaceShip method works on submarine", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         const mockCreateShip = jest.fn(createShip);
@@ -382,7 +382,7 @@ describe("PlaceShip method places vertical ships on correct coordinates only", (
     }
   });
 
-  test("Destroyer placeShip method works", () => {
+  test("PlaceShip method works on destroyer", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         const mockCreateShip = jest.fn(createShip);
@@ -407,7 +407,7 @@ describe("PlaceShip method places vertical ships on correct coordinates only", (
   });
 });
 
-describe("Hit method works changes value returned by horizontal ship get method to hit", () => {
+describe("ReceiveAttack method works changes value returned by horizontal ship get method to hit", () => {
   const shipLengths = {
     carrier: 5,
     battleship: 4,
@@ -516,7 +516,7 @@ describe("Hit method works changes value returned by horizontal ship get method 
   });
 });
 
-describe("Hit method works changes value returned by vertical ship get method to hit", () => {
+describe("ReceiveAttack method works changes value returned by vertical ship get method to hit", () => {
   const shipLengths = {
     carrier: 5,
     battleship: 4,
@@ -554,7 +554,7 @@ describe("Hit method works changes value returned by vertical ship get method to
     }
   };
 
-  test("Carrier hit method works", () => {
+  test("ReceiveAttack method works on carrier", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         const mockCreateShip = jest.fn(createShip);
@@ -568,7 +568,7 @@ describe("Hit method works changes value returned by vertical ship get method to
     }
   });
 
-  test("Battleship hit method works", () => {
+  test("ReceiveAttack method works on battleship", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         const mockCreateShip = jest.fn(createShip);
@@ -582,7 +582,7 @@ describe("Hit method works changes value returned by vertical ship get method to
     }
   });
 
-  test("Cruiser hit method works", () => {
+  test("ReceiveAttack method works cruiser", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         const mockCreateShip = jest.fn(createShip);
@@ -596,7 +596,7 @@ describe("Hit method works changes value returned by vertical ship get method to
     }
   });
 
-  test("Submarine hit method works", () => {
+  test("ReceiveAttack method works submarine", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         const mockCreateShip = jest.fn(createShip);
@@ -610,7 +610,7 @@ describe("Hit method works changes value returned by vertical ship get method to
     }
   });
 
-  test("Destroyer hit method works", () => {
+  test("ReceiveAttack method works on destroyer", () => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         const mockCreateShip = jest.fn(createShip);
@@ -790,5 +790,86 @@ describe("getAvailableCoords method returns available coordinates", () => {
     expect(availableCoords).not.toContainEqual([8, 8]);
     expect(availableCoords).not.toContainEqual([4, 4]);
     expect(availableCoords).not.toContainEqual([3, 0]);
+  });
+});
+
+describe.only("RemoveShips function works", () => {
+  test("Can remove carrier", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [2, 1], "horizontal", "carrier");
+    gameboard.removeShip("carrier");
+    gameboard.board.forEach((cell) => {
+      if (cell.value !== "empty" && cell.value !== "hit") {
+        expect(cell.value.name).not.toBe("carrier");
+        expect(cell.position).toBeNull();
+      }
+    });
+  });
+
+  test("Can remove battleship", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [5, 7], "horizontal", "battleship");
+    gameboard.placeShip(mockCreateShip, [1, 3], "vertical", "carrier");
+    gameboard.removeShip("battleship");
+    gameboard.board.forEach((cell) => {
+      if (cell.value !== "empty" && cell.value !== "hit") {
+        expect(cell.value.name).not.toBe("battleship");
+        return;
+      }
+      expect(cell.position).toBeNull();
+    });
+  });
+
+  test("Can remove cruiser", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [2, 1], "horizontal", "cruiser");
+    gameboard.placeShip(mockCreateShip, [4, 3], "vertical", "cruiser");
+    gameboard.placeShip(mockCreateShip, [5, 8], "horizontal", "battleship");
+    gameboard.removeShip("cruiser");
+    gameboard.board.forEach((cell) => {
+      if (cell.value !== "empty" && cell.value !== "hit") {
+        expect(cell.value.name).not.toBe("cruiser");
+        return;
+      }
+      expect(cell.position).toBeNull();
+    });
+  });
+
+  test("Can remove submarine", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [2, 1], "horizontal", "submarine");
+    gameboard.placeShip(mockCreateShip, [4, 2], "horizontal", "destroyer");
+    gameboard.placeShip(mockCreateShip, [1, 3], "vertical", "carrier");
+    gameboard.placeShip(mockCreateShip, [4, 3], "vertical", "cruiser");
+    gameboard.removeShip("submarine");
+    gameboard.board.forEach((cell) => {
+      if (cell.value !== "empty" && cell.value !== "hit") {
+        expect(cell.value.name).not.toBe("submarine");
+        return;
+      }
+      expect(cell.position).toBeNull();
+    });
+  });
+
+  test("Can remove destroyer", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [2, 1], "horizontal", "carrier");
+    gameboard.placeShip(mockCreateShip, [4, 2], "horizontal", "destroyer");
+    gameboard.placeShip(mockCreateShip, [1, 3], "vertical", "carrier");
+    gameboard.placeShip(mockCreateShip, [4, 3], "vertical", "cruiser");
+    gameboard.placeShip(mockCreateShip, [5, 8], "horizontal", "battleship");
+    gameboard.removeShip("destroyer");
+    gameboard.board.forEach((cell) => {
+      if (cell.value !== "empty" && cell.value !== "hit") {
+        expect(cell.value.name).not.toBe("destroyer");
+        return;
+      }
+      expect(cell.position).toBeNull();
+    });
   });
 });
