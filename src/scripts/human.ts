@@ -18,7 +18,29 @@ const createHuman = (boardFunc: (board?: Cell[]) => Gameboard) => {
     board.placeShip(shipFunc, coords, axis, shipName);
   };
 
-  return { board, attackEnemy, placeShip };
+  const initialPlace = (shipFunc: (name: ShipNames) => Ship) => {
+    const ships: ShipNames[] = [
+      "cruiser",
+      "battleship",
+      "carrier",
+      "submarine",
+      "destroyer",
+    ];
+
+    ships.forEach((shipName) => {
+      const axis = Math.random() > 0.5 ? "vertical" : "horizontal";
+      const availableCoords = board.getAvailableCoords(
+        axis,
+        shipName,
+        shipFunc
+      );
+      const randomCoord =
+        availableCoords[Math.floor(Math.random() * availableCoords.length)];
+      board.placeShip(shipFunc, randomCoord, axis, shipName);
+    });
+  };
+
+  return { board, attackEnemy, placeShip, initialPlace };
 };
 
 export default createHuman;

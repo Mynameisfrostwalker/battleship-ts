@@ -793,7 +793,7 @@ describe("getAvailableCoords method returns available coordinates", () => {
   });
 });
 
-describe.only("RemoveShips function works", () => {
+describe("RemoveShips function works", () => {
   test("Can remove carrier", () => {
     const mockCreateShip = jest.fn(createShip);
     const gameboard = createGameboard();
