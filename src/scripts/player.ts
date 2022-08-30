@@ -2,7 +2,22 @@ import type { Gameboard, Axis } from "./gameboard";
 import type { Cell } from "./cell";
 import type { Ship, ShipNames } from "./ship";
 
-const createHuman = (boardFunc: (board?: Cell[]) => Gameboard) => {
+interface Player {
+  board: Gameboard;
+  attackEnemy: (enemy: Gameboard, coords: [number, number]) => void;
+  placeShip: (
+    shipFunc: (name: ShipNames) => Ship,
+    coords: [number, number],
+    axis: Axis,
+    shipName: ShipNames
+  ) => void;
+  initialPlace: (shipFunc: (name: ShipNames) => Ship) => void;
+  removeShip: (name: ShipNames) => void;
+}
+
+type BoardFunc = (board?: Cell[]) => Gameboard;
+
+const createPlayer = (boardFunc: BoardFunc): Player => {
   const board = boardFunc();
 
   const attackEnemy = (enemy: Gameboard, coords: [number, number]) => {
@@ -17,6 +32,8 @@ const createHuman = (boardFunc: (board?: Cell[]) => Gameboard) => {
   ) => {
     board.placeShip(shipFunc, coords, axis, shipName);
   };
+
+  const removeShip = (name: ShipNames) => {};
 
   const initialPlace = (shipFunc: (name: ShipNames) => Ship) => {
     const ships: ShipNames[] = [
@@ -40,7 +57,8 @@ const createHuman = (boardFunc: (board?: Cell[]) => Gameboard) => {
     });
   };
 
-  return { board, attackEnemy, placeShip, initialPlace };
+  return { board, attackEnemy, placeShip, initialPlace, removeShip };
 };
 
-export default createHuman;
+export type { Player, BoardFunc };
+export default createPlayer;
