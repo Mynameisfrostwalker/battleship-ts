@@ -17,6 +17,8 @@ const config: Configuration = {
     cell: "./src/scripts/cell.ts",
     player: "./src/scripts/player.ts",
     aiPlayer: "./src/scripts/aiPlayer.ts",
+    initDisplay: "./src/scripts/initDisplay.ts",
+    domManipulator: "./src/scripts/domManipulator.ts",
   },
   module: {
     rules: [
