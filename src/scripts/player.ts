@@ -33,7 +33,9 @@ const createPlayer = (boardFunc: BoardFunc): Player => {
     board.placeShip(shipFunc, coords, axis, shipName);
   };
 
-  const removeShip = (name: ShipNames) => {};
+  const removeShip = (name: ShipNames) => {
+    board.removeShip(name);
+  };
 
   const initialPlace = (shipFunc: (name: ShipNames) => Ship) => {
     const ships: ShipNames[] = [

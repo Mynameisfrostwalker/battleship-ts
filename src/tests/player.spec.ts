@@ -11,7 +11,7 @@ test("Creates player object", () => {
 
 test("AttackEnemy method works (1)", () => {
   const mockGameboard = jest.fn(createGameboard);
-  const enemyBoard = createGameboard();
+  const enemyBoard = mockGameboard();
   const enemySpy = jest.spyOn(enemyBoard, "receiveAttack");
   const player = createPlayer(mockGameboard);
   player.attackEnemy(enemyBoard, [2, 3]);
@@ -20,7 +20,7 @@ test("AttackEnemy method works (1)", () => {
 
 test("AttackEnemy method works (2)", () => {
   const mockGameboard = jest.fn(createGameboard);
-  const enemyBoard = createGameboard();
+  const enemyBoard = mockGameboard();
   const enemySpy = jest.spyOn(enemyBoard, "receiveAttack");
   const player = createPlayer(mockGameboard);
   player.attackEnemy(enemyBoard, [5, 4]);
@@ -29,7 +29,7 @@ test("AttackEnemy method works (2)", () => {
 
 test("AttackEnemy method works (3)", () => {
   const mockGameboard = jest.fn(createGameboard);
-  const enemyBoard = createGameboard();
+  const enemyBoard = mockGameboard();
   const enemySpy = jest.spyOn(enemyBoard, "receiveAttack");
   const player = createPlayer(mockGameboard);
   player.attackEnemy(enemyBoard, [6, 8]);
@@ -114,7 +114,7 @@ test("RemoveShip method works (3)", () => {
   expect(enemySpy).lastCalledWith("cruiser");
 });
 
-test("  RemoveShip method works (4)", () => {
+test("RemoveShip method works (4)", () => {
   const mockGameboard = jest.fn(createGameboard);
   const player = createPlayer(mockGameboard);
   const enemySpy = jest.spyOn(
@@ -125,7 +125,7 @@ test("  RemoveShip method works (4)", () => {
   expect(enemySpy).lastCalledWith("submarine");
 });
 
-test("removeShip method works (5)", () => {
+test("RemoveShip method works (5)", () => {
   const mockGameboard = jest.fn(createGameboard);
   const player = createPlayer(mockGameboard);
   const enemySpy = jest.spyOn(

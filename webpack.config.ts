@@ -15,8 +15,8 @@ const config: Configuration = {
     ship: "./src/scripts/ship.ts",
     gameboard: "./src/scripts/gameboard.ts",
     cell: "./src/scripts/cell.ts",
-    human: "./src/scripts/human.ts",
-    ai: "./src/scripts/ai.ts",
+    player: "./src/scripts/player.ts",
+    aiPlayer: "./src/scripts/aiPlayer.ts",
   },
   module: {
     rules: [
