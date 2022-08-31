@@ -1,5 +1,5 @@
-import type { Player, BoardFunc } from "./player";
-import type { Gameboard, Axis } from "./gameboard";
+import type { BoardFunc } from "./player";
+import type { Gameboard } from "./gameboard";
 import createPlayer from "./player";
 
 const createAI = (boardFunc: BoardFunc) => {

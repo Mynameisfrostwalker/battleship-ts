@@ -1,7 +1,6 @@
 import createAI from "../scripts/aiPlayer";
 import createShip from "../scripts/ship";
 import createGameboard from "../scripts/gameboard";
-import createPlayer from "../scripts/player";
 
 test("Creates AI player object", () => {
   const mockGameboard = jest.fn(createGameboard);
