@@ -97,7 +97,7 @@ const composeElements = (arr: (ChildFunc | ChildFuncArr)[]): ChildFuncArr => {
   return [() => () => container];
 };
 
-const fixElement = (body: HTMLBodyElement, child: ChildFuncArr[]) => {
+const fixElement = (body: HTMLElement, child: ChildFuncArr[]) => {
   child.forEach((func) => {
     func.forEach((element) => {
       body.appendChild(element()());

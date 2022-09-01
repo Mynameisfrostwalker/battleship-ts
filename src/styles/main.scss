@@ -2,9 +2,15 @@
 @use "./mixins";
 @use "./theme";
 
+@font-face {
+    font-family: "typewriter";
+    src: url(../assets/fonts/typewriter.ttf);
+}
+
 body, .container {
     @include mixins.size(100vw, 100vh, true);
     @include mixins.color(null, theme.$body-bg-color);
+    @include mixins.font(calc(10px + 0.7vw), 500, "typewriter")
 }
 
 a {
@@ -25,9 +31,22 @@ a {
     
 }
 
+svg {
+    pointer-events: none;
+}
+
 button {
     border: none;
     outline: none;
+}
+
+.invisible {
+    display: none;
+}
+
+.error-div {
+    @include mixins.color(theme.$error-color);
+    margin-top: 10px;
 }
 
 .container {
@@ -54,6 +73,23 @@ button {
     @include mixins.flex(row, center, center);
 }
 
+.pirate-inner-border {
+    @include mixins.flex(row, center, center);
+    @include mixins.color(theme.$pirate-inner-color, theme.$pirate-inner-bg);
+    @include mixins.box-control(null, 10px, null, 10%);
+
+    flex-wrap: wrap;
+
+    .form-header {
+        @include mixins.font(calc(8px + 1vw), 500, "typewriter")
+    }
+}
+
+.pirate-outer-border {
+    @include mixins.color(null, theme.$pirate-outer-bg);
+    @include mixins.box-control(5px, 10px, null, 10%);
+}
+
 .player-form {
     flex: 1 1 50%;
     @include mixins.flex(column, center, space-around);
@@ -69,8 +105,9 @@ button {
 .player-section {
     @include mixins.flex(row, center, space-around);
     @include mixins.box-control(null, 10px);
-    @include mixins.size(100%, null, true);
+    @include mixins.size(100%, 25%, true);
     flex-wrap: wrap;
+    align-content: space-between
 }
 
 .player-part {

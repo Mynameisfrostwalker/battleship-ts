@@ -1,8 +1,28 @@
+import shipSailing from "../assets/audio/sailing.mp3";
+import shipSailing2 from "../assets/audio/sailing.ogg";
+import pirateImg from "../assets/images/pirate.svg";
 import { fixElement, composeElements, createElement } from "./domManipulator";
+import {
+  onCheckboxChange,
+  onVolumeChange,
+  onNameInput,
+  onFormSubmit,
+} from "./eventListeners";
 
-const volumeChange = (event: Event) => {
-  console.log(event.target);
-};
+const sailingAudio = () =>
+  composeElements([
+    [
+      createElement("source", null, null, null, [
+        ["src", shipSailing],
+        ["type", "audio/mpeg"],
+      ]),
+      createElement("source", null, null, null, [
+        ["src", shipSailing2],
+        ["type", "audio/ogg"],
+      ]),
+    ],
+    createElement("audio", ["ship-sailing"], null, null, [["loop", "true"]]),
+  ]);
 
 const createHeader = () =>
   composeElements([
@@ -18,22 +38,29 @@ const createGithubIcon = () =>
 
 const createVolumeDiv = () =>
   composeElements([
-    createElement("i", ["fa-solid", "fa-volume-high"], null, null, null, [
-      ["click", volumeChange],
+    createElement("i", ["fa-solid", "fa-volume-xmark"]),
+    createElement("div", ["not-play"], null, null, null, [
+      ["click", onVolumeChange],
     ]),
-    createElement("div"),
     createElement("div", ["volume-div"]),
   ]);
 
 const createPlayerDiv = (num: number) =>
   composeElements([
     [
-      createElement("input", null, null, `player${num}-input`, [
-        ["type", "text"],
-        ["name", `player${num}`],
-        ["placeholder", " "],
-        ["required", "true"],
-      ]),
+      createElement(
+        "input",
+        null,
+        null,
+        `player${num}-input`,
+        [
+          ["type", "text"],
+          ["name", `player${num}`],
+          ["placeholder", " "],
+          ["required", "true"],
+        ],
+        [["input", onNameInput]]
+      ),
       createElement(
         "label",
         ["player-label"],
@@ -51,10 +78,17 @@ const createAIDiv = (num: number) =>
       createElement("label", null, "AI mode:", null, [
         ["for", `AI${num}-input`],
       ]),
-      createElement("input", null, null, `AI${num}-input`, [
-        ["type", "checkbox"],
-        ["name", `AI${num}`],
-      ]),
+      createElement(
+        "input",
+        null,
+        null,
+        `AI${num}-input`,
+        [
+          ["type", "checkbox"],
+          ["name", `AI${num}`],
+        ],
+        [["change", onCheckboxChange]]
+      ),
     ],
     createElement("div", ["AI-elements"]),
   ]);
@@ -104,15 +138,39 @@ const createBlob = () =>
     createElement("div", ["blob"]),
   ]);
 
+const createPirateBoard = () =>
+  composeElements([
+    [
+      createElement(
+        "h2",
+        ["form-header"],
+        "Ahoy Cap'n, be ye ready to sail the seven seas with yer loyal crew?"
+      ),
+      createElement("img", ["pirate-image"], null, null, [
+        ["src", pirateImg],
+        ["width", "8%"],
+      ]),
+    ],
+    createElement("div", ["pirate-inner-border"]),
+    createElement("div", ["pirate-outer-border"]),
+  ]);
+
 const createForm = () =>
   composeElements([
     [
-      createElement("h2", ["form-header"], "Awaiting your orders Admiral!"),
+      ...createPirateBoard(),
       ...createPlayerSection(),
       ...createButtonSection(),
       ...createBlob(),
     ],
-    createElement("form", ["player-form"]),
+    createElement(
+      "form",
+      ["player-form"],
+      null,
+      null,
+      [["novalidate", "true"]],
+      [["submit", onFormSubmit]]
+    ),
   ]);
 
 const createMain = () =>
@@ -177,7 +235,7 @@ const createFooter = () =>
 
 const createContainer = () =>
   composeElements([
-    [...createHeader(), ...createMain(), ...createFooter()],
+    [...createHeader(), ...createMain(), ...createFooter(), ...sailingAudio()],
     createElement("div", ["container", "container-home"]),
   ]);
 
