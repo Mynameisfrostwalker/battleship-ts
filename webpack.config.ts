@@ -19,7 +19,7 @@ const config: Configuration = {
     aiPlayer: "./src/scripts/aiPlayer.ts",
     initDisplay: "./src/scripts/initDisplay.ts",
     domManipulator: "./src/scripts/domManipulator.ts",
-    eventListeners: "./src/scripts/eventListeners.ts",
+    pubsub: "./src/scripts/pubsub.ts",
   },
   module: {
     rules: [
