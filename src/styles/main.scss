@@ -1,2 +1,156 @@
 @use "./reset.scss";
 @use "./mixins";
+@use "./theme";
+
+body, .container {
+    @include mixins.size(100vw, 100vh, true);
+    @include mixins.color(null, theme.$body-bg-color);
+}
+
+a {
+    @include mixins.color(theme.$link-color);
+    text-decoration: none;
+
+    &:visited {
+        @include mixins.color(theme.$link-visited-color);
+    }
+
+    &:hover {
+        @include mixins.color(theme.$link-hover-color);
+    }
+
+    &:active {
+        @include mixins.color(theme.$link-active-color);
+    }
+    
+}
+
+button {
+    border: none;
+    outline: none;
+}
+
+.container {
+    @include mixins.flex(column, stretch);
+
+    header {
+        flex: 0 0 10vh;
+        @include mixins.flex(row, center, center);
+    }
+
+    main {
+        flex: 1 1 85vh;
+        @include mixins.flex(column, stretch, center);
+    }
+
+    footer {
+        flex: 0 0 5vh;
+        @include mixins.flex(row, center, center);
+        @include mixins.position(relative)
+    }
+}
+
+.volume-div {
+    @include mixins.flex(row, center, center);
+}
+
+.player-form {
+    flex: 1 1 50%;
+    @include mixins.flex(column, center, space-around);
+    @include mixins.position(relative);
+    z-index: 100;
+
+    .blob {
+        @include mixins.position(absolute, T, 0, L, 0);
+        z-index: -100;
+    }
+}
+
+.player-section {
+    @include mixins.flex(row, center, space-around);
+    @include mixins.box-control(null, 10px);
+    @include mixins.size(100%, null, true);
+    flex-wrap: wrap;
+}
+
+.player-part {
+    @include mixins.flex(column, flex-start, space-around);
+}
+
+.player-elements {
+    @include mixins.label-as-placeholder;
+
+    label {
+        @include mixins.color(theme.$player-label-color)
+    }
+
+    input {
+        @include mixins.color(theme.$player-label-color, theme.$player-input-color);
+        @include mixins.box-control(null, 10px);
+
+        border: none;
+        outline: none;
+    }
+}
+
+.AI-elements {
+    margin-top: 5px;
+    @include mixins.flex(row, center);
+    @include mixins.custom-checkbox(
+        15px, 
+        15px, 
+        theme.$checked-color,
+        null, 
+        null, 
+        null,
+        theme.$player-input-color, 
+        );
+}
+
+.game-start-button {
+    @include mixins.size(120px, 30px);
+    @include mixins.color(theme.$player-label-color, theme.$player-input-color);
+
+    &:hover {
+        @include mixins.color(theme.$player-input-color, theme.$player-label-color);
+    }
+}
+
+.footer {
+
+    .wave {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+        line-height: 0;
+        transform: rotate(180deg);
+    }
+    
+    .wave svg {
+        position: relative;
+        display: block;
+        width: calc(179% + 1.3px);
+        height: 130px;
+        transform: rotateY(180deg);
+    }
+    
+    .wave .shape-fill {
+        fill: theme.$footer-bg-color;
+    }
+}
+
+.github-div {
+    z-index: 100;
+}
+
+.github-div > a {
+    @include mixins.flex(row, center, space-between);
+    @include mixins.font(calc(10px + 0.5vw));
+    @include mixins.size(40%, null, true);
+
+    * {
+        @include mixins.box-control(null, 2px)
+    }
+}

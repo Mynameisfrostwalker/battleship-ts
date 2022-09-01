@@ -1,4 +1,8 @@
-type HTMLFunc = () => HTMLElement;
+type HTMLFunc = () =>
+  | HTMLElement
+  | SVGSVGElement
+  | SVGPathElement
+  | SVGGElement;
 type Child = HTMLFunc | HTMLFunc[];
 type ChildFunc = (child?: Child) => HTMLFunc;
 type ChildFuncArr = ChildFunc[];
@@ -15,7 +19,18 @@ const createElement = (
   attributes?: [string, string][] | null,
   eventListeners?: [string, (event: Event) => void][] | null
 ) => {
-  const container = document.createElement(elementName);
+  let container: HTMLElement | SVGSVGElement | SVGPathElement | SVGGElement =
+    document.createElement(elementName);
+  if (elementName === "svg") {
+    container = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  }
+  if (elementName === "path") {
+    container = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  }
+  if (elementName === "g") {
+    container = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  }
+
   if (classNames) {
     classNames.forEach((className) => {
       container.classList.add(className);

@@ -40,7 +40,7 @@
     font-family: $family, Arial, Helvetica, sans-serif;
 }
 
-@mixin color($color, $bgcolor) {
+@mixin color($color, $bgcolor: null) {
     color: $color;
     background-color: $bgcolor;
 }
@@ -78,17 +78,51 @@
 @mixin label-as-placeholder {
     @include position(relative);
 
-    input ~ label, input ~ label {
-        @include position(absolute, "T", 2.5px, "L", 5px);
-    }
-    
-    input:not(:placeholder-shown) ~ label, 
-    input:focus ~ label {
-        z-index: -1;
+    input {
+
+        ~ label {
+            @include position(absolute, "T", 10px, "L", 5px);
+        }
+
+        &:not(:placeholder-shown) ~ label, 
+        &:focus ~ label {
+            z-index: -1;
+        }
     }
     
 }
 
 @mixin box-shadow($x, $y, $blur, $spread, $color) {
     box-shadow: $x $y $blur $spread $color;
+}
+
+@mixin custom-checkbox(
+    $width: null, 
+    $height: null, 
+    $bg-color: null, 
+    $border: null, 
+    $content: null,
+    $content-color: null,
+    $checked-color: null
+    ) {
+    input[type="checkbox"] {
+        appearance: none;
+        width: $width;
+        height: $height;
+        background-color: $bg-color;
+        border: $border;
+        padding: 1px;
+        margin-left: 5px;
+
+        &:checked {
+            background-color: $checked-color;
+            color: $content-color;
+            font-weight: 600;
+        }
+
+        &:checked::after {
+            content: $content
+        }
+    }
+
 }
