@@ -793,6 +793,69 @@ describe("getAvailableCoords method returns available coordinates", () => {
   });
 });
 
+describe("getAIAvailableCoords method returns available coordinates", () => {
+  test("Works with zero ships already placed", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    const availableCoords = gameboard.getAIAvailableCoords(
+      "horizontal",
+      "cruiser",
+      mockCreateShip
+    );
+    expect(availableCoords).toContainEqual([0, 0]);
+    expect(availableCoords).toContainEqual([3, 4]);
+    expect(availableCoords).not.toContainEqual([9, 5]);
+    expect(availableCoords).not.toContainEqual([8, 8]);
+  });
+
+  test("Works with one ships already placed", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [3, 4], "horizontal", "carrier");
+    const availableCoords = gameboard.getAIAvailableCoords(
+      "vertical",
+      "battleship",
+      mockCreateShip
+    );
+    expect(availableCoords).toContainEqual([0, 0]);
+    expect(availableCoords).toContainEqual([1, 2]);
+    expect(availableCoords).toContainEqual([9, 5]);
+    expect(availableCoords).toContainEqual([0, 6]);
+    expect(availableCoords).not.toContainEqual([2, 3]);
+    expect(availableCoords).not.toContainEqual([5, 5]);
+    expect(availableCoords).not.toContainEqual([2, 4]);
+    expect(availableCoords).not.toContainEqual([3, 3]);
+    expect(availableCoords).not.toContainEqual([4, 4]);
+    expect(availableCoords).not.toContainEqual([3, 4]);
+    expect(availableCoords).not.toContainEqual([8, 8]);
+  });
+
+  test("Works with four ships already placed", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [2, 1], "horizontal", "destroyer");
+    gameboard.placeShip(mockCreateShip, [1, 3], "vertical", "carrier");
+    gameboard.placeShip(mockCreateShip, [4, 3], "vertical", "cruiser");
+    gameboard.placeShip(mockCreateShip, [5, 8], "horizontal", "battleship");
+    const availableCoords = gameboard.getAIAvailableCoords(
+      "vertical",
+      "submarine",
+      mockCreateShip
+    );
+
+    expect(availableCoords).toContainEqual([0, 0]);
+    expect(availableCoords).toContainEqual([9, 5]);
+    expect(availableCoords).toContainEqual([6, 1]);
+    expect(availableCoords).not.toContainEqual([0, 4]);
+    expect(availableCoords).not.toContainEqual([3, 4]);
+    expect(availableCoords).not.toContainEqual([2, 4]);
+    expect(availableCoords).not.toContainEqual([5, 3]);
+    expect(availableCoords).not.toContainEqual([8, 8]);
+    expect(availableCoords).not.toContainEqual([4, 4]);
+    expect(availableCoords).not.toContainEqual([3, 0]);
+  });
+});
+
 describe("RemoveShips function works", () => {
   test("Can remove carrier", () => {
     const mockCreateShip = jest.fn(createShip);

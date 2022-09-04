@@ -9,6 +9,7 @@ const createGithubDiv = () =>
     ],
     createElement("a", null, null, null, [
       ["href", "https://github.com/Mynameisfrostwalker"],
+      ["target", "_blank"],
     ]),
     createElement("div", ["github-div"]),
   ]);

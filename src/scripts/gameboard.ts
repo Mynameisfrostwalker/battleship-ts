@@ -20,6 +20,11 @@ interface Gameboard {
     shipName: ShipNames,
     shipFunc: (name: ShipNames, axis: Axis) => Ship
   ) => [number, number][];
+  getAIAvailableCoords: (
+    axis: Axis,
+    shipName: ShipNames,
+    shipFunc: (name: ShipNames, axis: Axis) => Ship
+  ) => [number, number][];
   removeShip: (shipName: ShipNames) => void;
 }
 
@@ -204,6 +209,46 @@ const createGameboard = (board?: Cell[]): Gameboard => {
     return arr;
   };
 
+  const getAIAvailableCoords = function getAIAvailableCoords(
+    this: Gameboard,
+    axis: Axis,
+    shipName: ShipNames,
+    shipFunc: (name: ShipNames, axis: Axis) => Ship
+  ): [number, number][] {
+    const arr: [number, number][] = [];
+    this.board.forEach((cell) => {
+      if (
+        typeof cell.left?.position === "number" ||
+        typeof cell.right?.position === "number" ||
+        typeof cell.top?.position === "number" ||
+        typeof cell.top?.right?.position === "number" ||
+        typeof cell.top?.left?.position === "number" ||
+        typeof cell.bottom?.right?.position === "number" ||
+        typeof cell.bottom?.left?.position === "number" ||
+        typeof cell.bottom?.position === "number"
+      ) {
+        return;
+      }
+      const gameboard = createGameboard(this.board);
+      gameboard.placeShip(shipFunc, cell.coords, axis, shipName);
+      const placed = gameboard.board.find(
+        (obj) =>
+          obj.coords[0] === cell.coords[0] && obj.coords[1] === cell.coords[1]
+      );
+
+      if (
+        placed?.value !== "hit" &&
+        placed?.value !== "empty" &&
+        placed?.value !== undefined
+      ) {
+        if (placed?.value.name === shipName) {
+          arr.push(cell.coords);
+        }
+      }
+    });
+    return arr;
+  };
+
   const removeShip = (shipName: ShipNames) => {
     shipStore.forEach((ship, ndx) => {
       if (ship.name === shipName) {
@@ -226,6 +271,7 @@ const createGameboard = (board?: Cell[]): Gameboard => {
     receiveAttack,
     areAllSunk,
     getAvailableCoords,
+    getAIAvailableCoords,
     removeShip,
   };
 };

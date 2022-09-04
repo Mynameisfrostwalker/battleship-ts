@@ -18,12 +18,29 @@ const createAI = (boardFunc: BoardFunc): AIPlayer => {
       coordsArr.push([i, j]);
     }
   }
-  const {
-    name,
-    boardObj,
-    attackEnemy: attack,
-    initialPlace,
-  } = createPlayer(boardFunc, "AI");
+  const { name, boardObj, attackEnemy: attack } = createPlayer(boardFunc, "AI");
+
+  const initialPlace = (shipFunc: (name: ShipNames, axis: Axis) => Ship) => {
+    const ships: ShipNames[] = [
+      "cruiser",
+      "battleship",
+      "carrier",
+      "submarine",
+      "destroyer",
+    ];
+
+    ships.forEach((shipName) => {
+      const axis = Math.random() > 0.5 ? "vertical" : "horizontal";
+      const availableCoords = boardObj.getAIAvailableCoords(
+        axis,
+        shipName,
+        shipFunc
+      );
+      const randomCoord =
+        availableCoords[Math.floor(Math.random() * availableCoords.length)];
+      boardObj.placeShip(shipFunc, randomCoord, axis, shipName);
+    });
+  };
 
   const attackEnemy = (enemy: Gameboard) => {
     const random = Math.floor(Math.random() * coordsArr.length);
