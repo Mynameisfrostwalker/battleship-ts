@@ -4,16 +4,18 @@ import createGameboard from "../scripts/gameboard";
 
 test("Creates player object", () => {
   const mockGameboard = jest.fn(createGameboard);
-  const player = createPlayer(mockGameboard);
-  expect(player).toHaveProperty("board");
-  expect(player.board).toEqual(mockGameboard.mock.results[0].value);
+  const player = createPlayer(mockGameboard, "John");
+  expect(player).toHaveProperty("boardObj");
+  expect(player.name).toBe("John");
+  expect(player.type).toBe("Human");
+  expect(player.boardObj).toEqual(mockGameboard.mock.results[0].value);
 });
 
 test("AttackEnemy method works (1)", () => {
   const mockGameboard = jest.fn(createGameboard);
   const enemyBoard = mockGameboard();
   const enemySpy = jest.spyOn(enemyBoard, "receiveAttack");
-  const player = createPlayer(mockGameboard);
+  const player = createPlayer(mockGameboard, "Eliott");
   player.attackEnemy(enemyBoard, [2, 3]);
   expect(enemySpy).lastCalledWith([2, 3]);
 });
@@ -22,7 +24,7 @@ test("AttackEnemy method works (2)", () => {
   const mockGameboard = jest.fn(createGameboard);
   const enemyBoard = mockGameboard();
   const enemySpy = jest.spyOn(enemyBoard, "receiveAttack");
-  const player = createPlayer(mockGameboard);
+  const player = createPlayer(mockGameboard, "Beep");
   player.attackEnemy(enemyBoard, [5, 4]);
   expect(enemySpy).lastCalledWith([5, 4]);
 });
@@ -31,14 +33,14 @@ test("AttackEnemy method works (3)", () => {
   const mockGameboard = jest.fn(createGameboard);
   const enemyBoard = mockGameboard();
   const enemySpy = jest.spyOn(enemyBoard, "receiveAttack");
-  const player = createPlayer(mockGameboard);
+  const player = createPlayer(mockGameboard, "John");
   player.attackEnemy(enemyBoard, [6, 8]);
   expect(enemySpy).lastCalledWith([6, 8]);
 });
 
 test("PlaceShip method works (1)", () => {
   const mockGameboard = jest.fn(createGameboard);
-  const player = createPlayer(mockGameboard);
+  const player = createPlayer(mockGameboard, "Reynald");
   const enemySpy = jest.spyOn(mockGameboard.mock.results[0].value, "placeShip");
   player.placeShip(createShip, [2, 3], "horizontal", "carrier");
   expect(enemySpy).lastCalledWith(createShip, [2, 3], "horizontal", "carrier");
@@ -46,7 +48,7 @@ test("PlaceShip method works (1)", () => {
 
 test("PlaceShip method works (2)", () => {
   const mockGameboard = jest.fn(createGameboard);
-  const player = createPlayer(mockGameboard);
+  const player = createPlayer(mockGameboard, "Ayo");
   const enemySpy = jest.spyOn(mockGameboard.mock.results[0].value, "placeShip");
   player.placeShip(createShip, [4, 5], "vertical", "battleship");
   expect(enemySpy).lastCalledWith(createShip, [4, 5], "vertical", "battleship");
@@ -54,7 +56,7 @@ test("PlaceShip method works (2)", () => {
 
 test("PlaceShip method works (3)", () => {
   const mockGameboard = jest.fn(createGameboard);
-  const player = createPlayer(mockGameboard);
+  const player = createPlayer(mockGameboard, "Emeka");
   const enemySpy = jest.spyOn(mockGameboard.mock.results[0].value, "placeShip");
   player.placeShip(createShip, [4, 8], "horizontal", "cruiser");
   expect(enemySpy).lastCalledWith(createShip, [4, 8], "horizontal", "cruiser");
@@ -62,7 +64,7 @@ test("PlaceShip method works (3)", () => {
 
 test("PlaceShip method works (4)", () => {
   const mockGameboard = jest.fn(createGameboard);
-  const player = createPlayer(mockGameboard);
+  const player = createPlayer(mockGameboard, "Joseph");
   const enemySpy = jest.spyOn(mockGameboard.mock.results[0].value, "placeShip");
   player.placeShip(createShip, [9, 0], "vertical", "submarine");
   expect(enemySpy).lastCalledWith(createShip, [9, 0], "vertical", "submarine");
@@ -70,7 +72,7 @@ test("PlaceShip method works (4)", () => {
 
 test("PlaceShip method works (5)", () => {
   const mockGameboard = jest.fn(createGameboard);
-  const player = createPlayer(mockGameboard);
+  const player = createPlayer(mockGameboard, "Elliot");
   const enemySpy = jest.spyOn(mockGameboard.mock.results[0].value, "placeShip");
   player.placeShip(createShip, [0, 9], "horizontal", "destroyer");
   expect(enemySpy).lastCalledWith(
@@ -83,7 +85,7 @@ test("PlaceShip method works (5)", () => {
 
 test("RemoveShip method works (1)", () => {
   const mockGameboard = jest.fn(createGameboard);
-  const player = createPlayer(mockGameboard);
+  const player = createPlayer(mockGameboard, "Rashford");
   const enemySpy = jest.spyOn(
     mockGameboard.mock.results[0].value,
     "removeShip"
@@ -94,7 +96,7 @@ test("RemoveShip method works (1)", () => {
 
 test("RemoveShip method works (2)", () => {
   const mockGameboard = jest.fn(createGameboard);
-  const player = createPlayer(mockGameboard);
+  const player = createPlayer(mockGameboard, "Goodluck");
   const enemySpy = jest.spyOn(
     mockGameboard.mock.results[0].value,
     "removeShip"
@@ -105,7 +107,7 @@ test("RemoveShip method works (2)", () => {
 
 test("RemoveShip method works (3)", () => {
   const mockGameboard = jest.fn(createGameboard);
-  const player = createPlayer(mockGameboard);
+  const player = createPlayer(mockGameboard, "Bubu");
   const enemySpy = jest.spyOn(
     mockGameboard.mock.results[0].value,
     "removeShip"
@@ -116,7 +118,7 @@ test("RemoveShip method works (3)", () => {
 
 test("RemoveShip method works (4)", () => {
   const mockGameboard = jest.fn(createGameboard);
-  const player = createPlayer(mockGameboard);
+  const player = createPlayer(mockGameboard, "Ben");
   const enemySpy = jest.spyOn(
     mockGameboard.mock.results[0].value,
     "removeShip"
@@ -127,7 +129,7 @@ test("RemoveShip method works (4)", () => {
 
 test("RemoveShip method works (5)", () => {
   const mockGameboard = jest.fn(createGameboard);
-  const player = createPlayer(mockGameboard);
+  const player = createPlayer(mockGameboard, "Sunday");
   const enemySpy = jest.spyOn(
     mockGameboard.mock.results[0].value,
     "removeShip"
@@ -151,9 +153,9 @@ describe("Initial place method works", () => {
 
   test("Initial place method places five ships (1)", () => {
     const mockGameboard = jest.fn(createGameboard);
-    const player = createPlayer(mockGameboard);
+    const player = createPlayer(mockGameboard, "Donny");
     player.initialPlace(createShip);
-    const ships = player.board.board.reduce<string[]>((acc, cell) => {
+    const ships = player.boardObj.board.reduce<string[]>((acc, cell) => {
       if (cell.value !== "hit" && cell.value !== "empty") {
         if (!acc.includes(cell.value.name)) {
           acc.push(cell.value.name);
@@ -167,9 +169,9 @@ describe("Initial place method works", () => {
 
   test("Initial place method places five ships (2)", () => {
     const mockGameboard = jest.fn(createGameboard);
-    const player = createPlayer(mockGameboard);
+    const player = createPlayer(mockGameboard, "Anu");
     player.initialPlace(createShip);
-    const ships = player.board.board.reduce<string[]>((acc, cell) => {
+    const ships = player.boardObj.board.reduce<string[]>((acc, cell) => {
       if (cell.value !== "hit" && cell.value !== "empty") {
         if (!acc.includes(cell.value.name)) {
           acc.push(cell.value.name);

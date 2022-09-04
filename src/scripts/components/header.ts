@@ -3,7 +3,7 @@ import { composeElements, createElement } from "../domManipulator";
 const createHeader = () =>
   composeElements([
     createElement("h1", ["battleship-header"], "Battleship"),
-    createElement("header", ["header-div"]),
+    createElement("header", ["initial-header"]),
   ]);
 
 export default createHeader;

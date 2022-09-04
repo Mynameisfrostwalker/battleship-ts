@@ -137,7 +137,7 @@ describe("PlaceShip method places horizontal ships on correct coordinates only",
         const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
         gameboard.placeShip(mockCreateShip, [i, j], "horizontal", "carrier");
-        expect(mockCreateShip).toHaveBeenCalledWith("carrier");
+        expect(mockCreateShip).toHaveBeenCalledWith("carrier", "horizontal");
         gameboard.board.forEach((cell) => {
           if (i + shipLengths.carrier > 10) {
             checkWhenNoSpace(cell);
@@ -161,7 +161,7 @@ describe("PlaceShip method places horizontal ships on correct coordinates only",
         const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
         gameboard.placeShip(mockCreateShip, [i, j], "horizontal", "battleship");
-        expect(mockCreateShip).toHaveBeenCalledWith("battleship");
+        expect(mockCreateShip).toHaveBeenCalledWith("battleship", "horizontal");
         gameboard.board.forEach((cell) => {
           if (i + shipLengths.battleship > 10) {
             checkWhenNoSpace(cell);
@@ -185,7 +185,7 @@ describe("PlaceShip method places horizontal ships on correct coordinates only",
         const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
         gameboard.placeShip(mockCreateShip, [i, j], "horizontal", "cruiser");
-        expect(mockCreateShip).toHaveBeenCalledWith("cruiser");
+        expect(mockCreateShip).toHaveBeenCalledWith("cruiser", "horizontal");
         gameboard.board.forEach((cell) => {
           if (i + shipLengths.cruiser > 10) {
             checkWhenNoSpace(cell);
@@ -209,7 +209,7 @@ describe("PlaceShip method places horizontal ships on correct coordinates only",
         const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
         gameboard.placeShip(mockCreateShip, [i, j], "horizontal", "submarine");
-        expect(mockCreateShip).toHaveBeenCalledWith("submarine");
+        expect(mockCreateShip).toHaveBeenCalledWith("submarine", "horizontal");
         gameboard.board.forEach((cell) => {
           if (i + shipLengths.submarine > 10) {
             checkWhenNoSpace(cell);
@@ -233,7 +233,7 @@ describe("PlaceShip method places horizontal ships on correct coordinates only",
         const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
         gameboard.placeShip(mockCreateShip, [i, j], "horizontal", "destroyer");
-        expect(mockCreateShip).toHaveBeenCalledWith("destroyer");
+        expect(mockCreateShip).toHaveBeenCalledWith("destroyer", "horizontal");
         gameboard.board.forEach((cell) => {
           if (i + shipLengths.destroyer > 10) {
             checkWhenNoSpace(cell);
@@ -292,7 +292,7 @@ describe("PlaceShip method places vertical ships on correct coordinates only", (
         const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
         gameboard.placeShip(mockCreateShip, [i, j], "vertical", "carrier");
-        expect(mockCreateShip).toHaveBeenCalledWith("carrier");
+        expect(mockCreateShip).toHaveBeenCalledWith("carrier", "vertical");
         gameboard.board.forEach((cell) => {
           if (j + shipLengths.carrier > 10) {
             checkWhenNoSpace(cell);
@@ -316,7 +316,7 @@ describe("PlaceShip method places vertical ships on correct coordinates only", (
         const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
         gameboard.placeShip(mockCreateShip, [i, j], "vertical", "battleship");
-        expect(mockCreateShip).toHaveBeenCalledWith("battleship");
+        expect(mockCreateShip).toHaveBeenCalledWith("battleship", "vertical");
         gameboard.board.forEach((cell) => {
           if (j + shipLengths.battleship > 10) {
             checkWhenNoSpace(cell);
@@ -340,7 +340,7 @@ describe("PlaceShip method places vertical ships on correct coordinates only", (
         const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
         gameboard.placeShip(mockCreateShip, [i, j], "vertical", "cruiser");
-        expect(mockCreateShip).toHaveBeenCalledWith("cruiser");
+        expect(mockCreateShip).toHaveBeenCalledWith("cruiser", "vertical");
         gameboard.board.forEach((cell) => {
           if (j + shipLengths.cruiser > 10) {
             checkWhenNoSpace(cell);
@@ -364,7 +364,7 @@ describe("PlaceShip method places vertical ships on correct coordinates only", (
         const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
         gameboard.placeShip(mockCreateShip, [i, j], "vertical", "submarine");
-        expect(mockCreateShip).toHaveBeenCalledWith("submarine");
+        expect(mockCreateShip).toHaveBeenCalledWith("submarine", "vertical");
         gameboard.board.forEach((cell) => {
           if (j + shipLengths.submarine > 10) {
             checkWhenNoSpace(cell);
@@ -388,7 +388,7 @@ describe("PlaceShip method places vertical ships on correct coordinates only", (
         const mockCreateShip = jest.fn(createShip);
         const gameboard = createGameboard();
         gameboard.placeShip(mockCreateShip, [i, j], "vertical", "destroyer");
-        expect(mockCreateShip).toHaveBeenCalledWith("destroyer");
+        expect(mockCreateShip).toHaveBeenCalledWith("destroyer", "vertical");
         gameboard.board.forEach((cell) => {
           if (j + shipLengths.destroyer > 10) {
             checkWhenNoSpace(cell);

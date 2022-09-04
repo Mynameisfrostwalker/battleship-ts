@@ -7,15 +7,7 @@ const createPart = (num: number) =>
     [
       ...createPlayerDiv(num),
       ...createAIDiv(num),
-      createElement(
-        "span",
-        ["error-div"],
-        null,
-        null,
-        null,
-        null,
-        "error-span"
-      ),
+      createElement("span", ["error-div"]),
     ],
     createElement("p", ["player-part", `player${num}-part`]),
   ]);

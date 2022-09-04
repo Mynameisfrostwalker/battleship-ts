@@ -20,6 +20,8 @@ const config: Configuration = {
     initDisplay: "./src/scripts/initDisplay.ts",
     domManipulator: "./src/scripts/domManipulator.ts",
     pubsub: "./src/scripts/pubsub.ts",
+    gameDisplay: "./src/scripts/gameDisplay.ts",
+    gameLoop: "./src/scripts/gameLoop.ts",
   },
   module: {
     rules: [

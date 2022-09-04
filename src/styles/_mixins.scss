@@ -8,7 +8,7 @@
     }
 }
 
-@mixin box-control($margin, $padding: $margin, $border: null, $border-radius: null) {
+@mixin box-control($margin: null, $padding: $margin, $border: null, $border-radius: null) {
     margin: $margin;
     padding: $padding;
     border: $border;
@@ -125,4 +125,12 @@
         }
     }
 
+}
+
+@mixin image-as-background($url, $repeat: no-repeat, $size: cover, $attachment: fixed, $position: null) {
+    background-image: $url;
+    background-repeat: $repeat;
+    background-size: $size;
+    background-attachment: $attachment;
+    background-position: $position;
 }

@@ -9,15 +9,15 @@ type ShipValues = ShipNames | "hit";
 
 interface Ship {
   name: ShipNames;
+  axis: "horizontal" | "vertical";
   length: number;
   get(num?: number): ShipValues[] | ShipValues;
   hit(num: number): void;
   isSunk(): boolean;
 }
 
-const createShip = (name: ShipNames): Ship => {
+const createShip = (name: ShipNames, axis: "horizontal" | "vertical"): Ship => {
   const shipArray: ShipValues[] = [];
-
   const shipLengths = {
     carrier: 5,
     battleship: 4,
@@ -43,7 +43,7 @@ const createShip = (name: ShipNames): Ship => {
 
   const isSunk = () => shipArray.every((value) => value === "hit");
 
-  return { name, length: shipLengths[name], get, hit, isSunk };
+  return { name, axis, length: shipLengths[name], get, hit, isSunk };
 };
 
 export type { ShipValues, ShipNames, Ship };

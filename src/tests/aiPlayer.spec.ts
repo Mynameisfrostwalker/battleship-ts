@@ -5,8 +5,10 @@ import createGameboard from "../scripts/gameboard";
 test("Creates AI player object", () => {
   const mockGameboard = jest.fn(createGameboard);
   const AI = createAI(mockGameboard);
-  expect(AI).toHaveProperty("board");
-  expect(AI.board).toEqual(mockGameboard.mock.results[0].value);
+  expect(AI).toHaveProperty("boardObj");
+  expect(AI.name).toBe("AI");
+  expect(AI.type).toBe("AI");
+  expect(AI.boardObj).toEqual(mockGameboard.mock.results[0].value);
 });
 
 describe("Testing attackEnemy method", () => {
@@ -74,7 +76,7 @@ describe("Initial place method works", () => {
     const mockGameboard = jest.fn(createGameboard);
     const AI = createAI(mockGameboard);
     AI.initialPlace(createShip);
-    const ships = AI.board.board.reduce<string[]>((acc, cell) => {
+    const ships = AI.boardObj.board.reduce<string[]>((acc, cell) => {
       if (cell.value !== "hit" && cell.value !== "empty") {
         if (!acc.includes(cell.value.name)) {
           acc.push(cell.value.name);
@@ -90,7 +92,7 @@ describe("Initial place method works", () => {
     const mockGameboard = jest.fn(createGameboard);
     const AI = createAI(mockGameboard);
     AI.initialPlace(createShip);
-    const ships = AI.board.board.reduce<string[]>((acc, cell) => {
+    const ships = AI.boardObj.board.reduce<string[]>((acc, cell) => {
       if (cell.value !== "hit" && cell.value !== "empty") {
         if (!acc.includes(cell.value.name)) {
           acc.push(cell.value.name);

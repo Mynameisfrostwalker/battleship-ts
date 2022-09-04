@@ -52,12 +52,12 @@ button {
 .container {
     @include mixins.flex(column, stretch);
 
-    header {
+    .initial-header {
         flex: 0 0 10vh;
         @include mixins.flex(row, center, center);
     }
 
-    main {
+    .initial-main {
         flex: 1 1 85vh;
         @include mixins.flex(column, stretch, center);
     }
@@ -73,32 +73,60 @@ button {
     @include mixins.flex(row, center, center);
 }
 
-.pirate-inner-border {
-    @include mixins.flex(row, center, center);
-    @include mixins.color(theme.$pirate-inner-color, theme.$pirate-inner-bg);
-    @include mixins.box-control(null, 10px, null, 10%);
-
-    flex-wrap: wrap;
-
-    .form-header {
-        @include mixins.font(calc(8px + 1vw), 500, "typewriter")
-    }
-}
-
-.pirate-outer-border {
-    @include mixins.color(null, theme.$pirate-outer-bg);
-    @include mixins.box-control(5px, 10px, null, 10%);
-}
-
 .player-form {
     flex: 1 1 50%;
     @include mixins.flex(column, center, space-around);
     @include mixins.position(relative);
     z-index: 100;
 
+    .pirate-inner-border {
+        @include mixins.flex(row, center, center);
+        @include mixins.color(theme.$pirate-inner-color, theme.$pirate-inner-bg);
+        @include mixins.box-control(null, 10px, null, 10%);
+    
+        flex-wrap: wrap;
+    
+        .form-header {
+            @include mixins.font(calc(8px + 1vw), 500, "typewriter")
+        }
+    }
+    
+    .pirate-outer-border {
+        @include mixins.color(null, theme.$pirate-outer-bg);
+        @include mixins.box-control(5px, 10px, null, 10%);
+    }
+
     .blob {
         @include mixins.position(absolute, T, 0, L, 0);
         z-index: -100;
+    }
+}
+
+.game-header {
+    @include mixins.box-control(null, 10px);
+    @include mixins.flex(row, center, space-around);
+    flex: 0 0 10vh;
+
+    >h1 {
+        @include mixins.font(calc(10px + 2vw), 500, "typewriter");
+    }
+    
+    .pirate-inner-border {
+        @include mixins.flex(row, center, center);
+        @include mixins.color(theme.$pirate-inner-color, theme.$pirate-inner-bg);
+        @include mixins.box-control(null, 5px, null, 10%);
+    
+        flex-wrap: wrap;
+    
+        .form-header {
+            @include mixins.font(calc(8px + 0.5vw), 500, "typewriter")
+        }
+    }
+    
+    .pirate-outer-border {
+        @include mixins.color(null, theme.$pirate-outer-bg);
+        @include mixins.box-control(0px, 5px, null, 10%);
+        @include mixins.size(calc(10px + 50%), null, false);
     }
 }
 
@@ -190,4 +218,80 @@ button {
     * {
         @include mixins.box-control(null, 2px)
     }
+}
+
+.board-header {
+    text-align: center;
+}
+
+.game-main {
+    @include mixins.flex(row, center, space-around);
+    flex-wrap: wrap;
+    flex: 1 1 85vh;
+
+    .board-section {
+        @include mixins.box-control(null, 20px);
+    }
+}
+
+.gameboard {
+    $cell-size: calc(1rem + 1.5vw);
+    @include mixins.grid(repeat(11, $cell-size), repeat(11, $cell-size));
+    grid-auto-flow: column;
+
+    .cell {
+        @include mixins.size($cell-size, $min: false);
+    }
+
+    .cell.game-cell {
+        @include mixins.box-control(null, null, $border: (1px solid white));
+        @include mixins.position(relative);
+    }
+
+    .cell.number-cell {
+        @include mixins.flex(row, center, center);
+        @include mixins.box-control(null, null, null);
+    }
+
+    .ship {
+        @include mixins.position(absolute, "T", 0, "L", 0);
+        z-index: 100;
+        
+        * {
+            @include mixins.size($cell-size, $cell-size, false);
+        }
+
+        &.vertical {
+            @include mixins.flex(row);
+            @include mixins.size(null, 100%, false);
+            transform: rotate(90deg) translateY(calc(-1rem - 1.5vw));
+            transform-origin: top left;
+        }
+
+        &.horizontal {
+            @include mixins.flex(row);
+            @include mixins.size(null, 100%, false);
+        }
+
+        &.carrier {
+            @include mixins.image-as-background(url(../assets/images/carrier-cropped.svg), no-repeat, 100%, null, bottom);
+        }
+
+        &.battleship {
+            @include mixins.image-as-background(url(../assets/images/carrier-cropped.svg), no-repeat, 100%, null, bottom);
+        }
+
+        &.cruiser {
+            @include mixins.image-as-background(url(../assets/images/destroyer-cropped.svg), no-repeat, 100%, null, bottom);
+        }
+
+        &.submarine {
+            @include mixins.image-as-background(url(../assets/images/submarine-cropped.svg), no-repeat, 100%, null, bottom);
+        }
+
+        &.destroyer {
+            @include mixins.image-as-background(url(../assets/images/patrol-cropped.svg), no-repeat, 100%, null, bottom);
+        }
+    }
+
 }

@@ -15,9 +15,7 @@ const createElement = (
   textContent?: string | null,
   id?: string | null,
   attributes?: [string, string][] | null,
-  eventListeners?: [string, (container: HTMLElement) => void][] | null,
-  uniqueScriptName?: string | null,
-  scripts?: [string, (...args: unknown[]) => void][] | null
+  eventListeners?: [string, (container: HTMLElement) => void][] | null
 ) => {
   const container: HTMLElement = document.createElement(elementName);
 
@@ -46,50 +44,6 @@ const createElement = (
 
       container.addEventListener(eventListener[0], eventWrapper);
     });
-  }
-
-  if (uniqueScriptName) {
-    const addClass = (className: unknown) => {
-      if (typeof className === "string") {
-        container.classList.add(className);
-      }
-    };
-
-    const removeClass = (className: unknown) => {
-      if (typeof className === "string") {
-        container.classList.remove(className);
-      }
-    };
-
-    const setAttribute = (attribute: unknown, value: unknown) => {
-      if (typeof attribute === "string" && typeof value === "string") {
-        if (value === "") {
-          container.removeAttribute(attribute);
-        } else {
-          container.setAttribute(attribute, value);
-        }
-      }
-    };
-
-    const setText = (text: unknown) => {
-      if (typeof text === "string") {
-        container.textContent = text;
-      }
-    };
-
-    subscribe(`${uniqueScriptName}-addClass`, addClass);
-    subscribe(`${uniqueScriptName}-removeClass`, removeClass);
-    subscribe(`${uniqueScriptName}-setAttribute`, setAttribute);
-    subscribe(`${uniqueScriptName}-setText`, setText);
-
-    if (scripts) {
-      scripts.forEach((script) => {
-        const scriptWrapper = (...args: unknown[]) => {
-          script[1](container, ...args);
-        };
-        subscribe(`${uniqueScriptName}-${script[0]}`, scriptWrapper);
-      });
-    }
   }
 
   return (child?: Child | { (): HTMLDivElement; fake: boolean }) => {
@@ -240,6 +194,7 @@ const composeElements = (arr: (ChildFunc | ChildFuncArr)[]): ChildFuncArr => {
 };
 
 const fixElement = (body: HTMLElement, child: ChildFuncArr[]) => {
+  body.replaceChildren();
   child.forEach((func) => {
     func.forEach((element) => {
       body.appendChild(element()());
@@ -247,4 +202,5 @@ const fixElement = (body: HTMLElement, child: ChildFuncArr[]) => {
   });
 };
 
+export type { ChildFunc };
 export { fixElement, composeElements, createElement, createSVG };

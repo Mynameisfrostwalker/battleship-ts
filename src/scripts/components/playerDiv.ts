@@ -1,17 +1,17 @@
 import { composeElements, createElement } from "../domManipulator";
-import { publish } from "../pubsub";
 
 const onNameInput = (input: HTMLElement) => {
-  if (input instanceof HTMLInputElement) {
+  const span = input.parentElement?.nextElementSibling?.nextElementSibling;
+  if (input instanceof HTMLInputElement && span) {
     if (input.validity.valueMissing) {
-      publish("error-span-setText", "Input must not be left blank!");
+      span.textContent = "Input must not be left blank!";
     }
     if (input.value.trim() === "") {
       const error = "Input is blank.";
-      publish("error-span-setText", "Input must not be left blank!");
+      span.textContent = "Input must not be left blank!";
       input.setCustomValidity(error);
     } else {
-      publish("error-span-setText", "");
+      span.textContent = "";
       input.setCustomValidity("");
     }
   }
@@ -31,8 +31,7 @@ const createPlayerDiv = (num: number) =>
           ["placeholder", " "],
           ["required", "true"],
         ],
-        [["input", onNameInput]],
-        "player-input-bar"
+        [["input", onNameInput]]
       ),
       createElement(
         "label",
@@ -42,15 +41,7 @@ const createPlayerDiv = (num: number) =>
         [["for", `player${num}-input`]]
       ),
     ],
-    createElement(
-      "div",
-      ["player-elements"],
-      null,
-      null,
-      null,
-      null,
-      "player-elements-div"
-    ),
+    createElement("div", ["player-elements"]),
   ]);
 
 export default createPlayerDiv;

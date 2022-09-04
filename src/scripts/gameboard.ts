@@ -8,7 +8,7 @@ type Axis = "horizontal" | "vertical";
 interface Gameboard {
   board: Cell[];
   placeShip: (
-    shipFactory: (name: ShipNames) => Ship,
+    shipFactory: (name: ShipNames, axis: Axis) => Ship,
     coords: [number, number],
     axis: Axis,
     shipName: ShipNames
@@ -18,7 +18,7 @@ interface Gameboard {
   getAvailableCoords: (
     axis: Axis,
     shipName: ShipNames,
-    shipFunc: (name: ShipNames) => Ship
+    shipFunc: (name: ShipNames, axis: Axis) => Ship
   ) => [number, number][];
   removeShip: (shipName: ShipNames) => void;
 }
@@ -117,12 +117,12 @@ const createGameboard = (board?: Cell[]): Gameboard => {
   };
 
   const placeShip = (
-    shipFactory: (name: ShipNames) => Ship,
+    shipFactory: (name: ShipNames, axis: Axis) => Ship,
     coords: [number, number],
     axis: Axis,
     shipName: ShipNames
   ) => {
-    const ship = shipFactory(shipName);
+    const ship = shipFactory(shipName, axis);
     if (!checkIfShipNotInCells(coords, axis, shipName)) {
       return;
     }
@@ -180,7 +180,7 @@ const createGameboard = (board?: Cell[]): Gameboard => {
     this: Gameboard,
     axis: Axis,
     shipName: ShipNames,
-    shipFunc: (name: ShipNames) => Ship
+    shipFunc: (name: ShipNames, axis: Axis) => Ship
   ): [number, number][] {
     const arr: [number, number][] = [];
     this.board.forEach((cell) => {
