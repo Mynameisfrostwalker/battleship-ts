@@ -87,6 +87,7 @@
         &:not(:placeholder-shown) ~ label, 
         &:focus ~ label {
             z-index: -1;
+            user-select: none;
         }
     }
     

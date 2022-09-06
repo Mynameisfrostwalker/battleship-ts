@@ -72,8 +72,13 @@ const createShip = (
 
   const dragStart = (event: Event) => {
     const ship = event.currentTarget;
-    if (event instanceof DragEvent && ship instanceof HTMLElement) {
+    if (
+      event instanceof DragEvent &&
+      ship instanceof HTMLElement &&
+      isShipName(shipName)
+    ) {
       event.dataTransfer?.setData("text/plain", ship.id);
+      player.boardObj.removeShip(shipName);
       setTimeout(() => {
         ship.classList.add("invisible");
       }, 0);
@@ -82,7 +87,8 @@ const createShip = (
 
   const dragEnd = (event: Event) => {
     const ship = event.currentTarget;
-    if (ship instanceof HTMLElement) {
+    if (ship instanceof HTMLElement && isShipName(shipName)) {
+      player.boardObj.placeShip(shipFunc, coords, axis, shipName);
       ship.classList.remove("invisible");
     }
   };

@@ -23,22 +23,57 @@ const createCell = (
   const dragEnter = (event: Event) => {
     event.preventDefault();
     const targetCell = event.currentTarget;
-    if (targetCell instanceof HTMLElement) {
-      targetCell.classList.add("drag-over");
+    if (event instanceof DragEvent && targetCell instanceof HTMLElement) {
+      const id = event.dataTransfer?.getData("text/plain") || "";
+      const ship = document.querySelector(`#${id}`);
+      const x = targetCell.getAttribute("data-x");
+      const y = targetCell.getAttribute("data-y");
+      const name = ship?.getAttribute("data-name");
+      const axis = ship?.getAttribute("data-axis");
+      if (x && y && isAxis(axis) && isShipName(name)) {
+        const coords: [number, number] = [parseInt(x, 10), parseInt(y, 10)];
+        if (
+          player.boardObj
+            .getAvailableCoords(axis, name, createShip)
+            .some((value) => value[0] === coords[0] && value[1] === coords[1])
+        ) {
+          targetCell.classList.add("drag-over-available");
+        } else {
+          targetCell.classList.add("drag-over");
+        }
+      }
     }
   };
 
   const dragOver = (event: Event) => {
     event.preventDefault();
     const targetCell = event.currentTarget;
-    if (targetCell instanceof HTMLElement) {
-      targetCell.classList.add("drag-over");
+    if (event instanceof DragEvent && targetCell instanceof HTMLElement) {
+      const id = event.dataTransfer?.getData("text/plain") || "";
+      const ship = document.querySelector(`#${id}`);
+      const x = targetCell.getAttribute("data-x");
+      const y = targetCell.getAttribute("data-y");
+      const name = ship?.getAttribute("data-name");
+      const axis = ship?.getAttribute("data-axis");
+      if (x && y && isAxis(axis) && isShipName(name)) {
+        const coords: [number, number] = [parseInt(x, 10), parseInt(y, 10)];
+        if (
+          player.boardObj
+            .getAvailableCoords(axis, name, createShip)
+            .some((value) => value[0] === coords[0] && value[1] === coords[1])
+        ) {
+          targetCell.classList.add("drag-over-available");
+        } else {
+          targetCell.classList.add("drag-over");
+        }
+      }
     }
   };
 
   const dragLeave = (event: Event) => {
     const targetCell = event.currentTarget;
     if (targetCell instanceof HTMLElement) {
+      targetCell.classList.remove("drag-over-available");
       targetCell.classList.remove("drag-over");
     }
   };
@@ -60,11 +95,11 @@ const createCell = (
             .getAvailableCoords(axis, name, createShip)
             .some((value) => value[0] === coords[0] && value[1] === coords[1])
         ) {
-          player.boardObj.removeShip(name);
           player.boardObj.placeShip(createShip, coords, axis, name);
           publish(`${playerPos}-redisplay`);
         } else {
           targetCell.classList.remove("drag-over");
+          targetCell.classList.remove("drag-over-available");
         }
       }
     }

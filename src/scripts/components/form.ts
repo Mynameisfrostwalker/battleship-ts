@@ -6,6 +6,7 @@ import createBlob from "./blob";
 import { publish } from "../pubsub";
 
 const onFormSubmit = (event: Event) => {
+  event.preventDefault();
   const form = event.currentTarget;
   const inputs: HTMLInputElement[] = [];
   if (form instanceof HTMLFormElement) {

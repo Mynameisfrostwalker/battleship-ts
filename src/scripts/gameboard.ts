@@ -127,6 +127,9 @@ const createGameboard = (board?: Cell[]): Gameboard => {
     axis: Axis,
     shipName: ShipNames
   ) => {
+    if (shipStore.find((ship) => ship.name === shipName)) {
+      return;
+    }
     const ship = shipFactory(shipName, axis);
     if (!checkIfShipNotInCells(coords, axis, shipName)) {
       return;
@@ -140,7 +143,9 @@ const createGameboard = (board?: Cell[]): Gameboard => {
             coords[0] + shipLengths[shipName] <= 10
           ) {
             cell.value = ship;
-            shipStore.push(ship);
+            if (!shipStore.find((ship2) => ship2.name === shipName)) {
+              shipStore.push(ship);
+            }
             cell.position = cell.coords[0] - coords[0];
           }
         }
@@ -154,7 +159,9 @@ const createGameboard = (board?: Cell[]): Gameboard => {
             coords[1] + shipLengths[shipName] <= 10
           ) {
             cell.value = ship;
-            shipStore.push(ship);
+            if (!shipStore.find((ship2) => ship2.name === shipName)) {
+              shipStore.push(ship);
+            }
             cell.position = cell.coords[1] - coords[1];
           }
         }

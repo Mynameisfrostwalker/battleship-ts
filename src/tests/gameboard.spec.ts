@@ -741,13 +741,33 @@ describe("getAvailableCoords method returns available coordinates", () => {
     const gameboard = createGameboard();
     const availableCoords = gameboard.getAvailableCoords(
       "horizontal",
-      "cruiser",
+      "carrier",
       mockCreateShip
     );
-    expect(availableCoords).toContainEqual([0, 0]);
-    expect(availableCoords).toContainEqual([3, 4]);
-    expect(availableCoords).not.toContainEqual([9, 5]);
-    expect(availableCoords).not.toContainEqual([8, 8]);
+    gameboard.board.forEach((cell) => {
+      if (cell.coords[0] > 5) {
+        expect(availableCoords).not.toContain(cell.coords);
+      } else {
+        expect(availableCoords).toContain(cell.coords);
+      }
+    });
+  });
+
+  test("Works with zero ships already placed (2)", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    const availableCoords = gameboard.getAvailableCoords(
+      "vertical",
+      "carrier",
+      mockCreateShip
+    );
+    gameboard.board.forEach((cell) => {
+      if (cell.coords[1] > 5) {
+        expect(availableCoords).not.toContain(cell.coords);
+      } else {
+        expect(availableCoords).toContain(cell.coords);
+      }
+    });
   });
 
   test("Works with one ships already placed", () => {
@@ -799,13 +819,33 @@ describe("getAIAvailableCoords method returns available coordinates", () => {
     const gameboard = createGameboard();
     const availableCoords = gameboard.getAIAvailableCoords(
       "horizontal",
-      "cruiser",
+      "carrier",
       mockCreateShip
     );
-    expect(availableCoords).toContainEqual([0, 0]);
-    expect(availableCoords).toContainEqual([3, 4]);
-    expect(availableCoords).not.toContainEqual([9, 5]);
-    expect(availableCoords).not.toContainEqual([8, 8]);
+    gameboard.board.forEach((cell) => {
+      if (cell.coords[0] > 5) {
+        expect(availableCoords).not.toContain(cell.coords);
+      } else {
+        expect(availableCoords).toContain(cell.coords);
+      }
+    });
+  });
+
+  test("Works with zero ships already placed (2)", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    const availableCoords = gameboard.getAIAvailableCoords(
+      "vertical",
+      "carrier",
+      mockCreateShip
+    );
+    gameboard.board.forEach((cell) => {
+      if (cell.coords[1] > 5) {
+        expect(availableCoords).not.toContain(cell.coords);
+      } else {
+        expect(availableCoords).toContain(cell.coords);
+      }
+    });
   });
 
   test("Works with one ships already placed", () => {
@@ -934,5 +974,67 @@ describe("RemoveShips function works", () => {
       }
       expect(cell.position).toBeNull();
     });
+  });
+});
+
+describe("Cannot place same ships twice", () => {
+  test("Cannot place carrier twice", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [0, 0], "vertical", "carrier");
+    gameboard.placeShip(mockCreateShip, [2, 5], "horizontal", "carrier");
+    const cell =
+      gameboard.board.find(
+        (value) => value.coords[0] === 2 && value.coords[1] === 5
+      ) || null;
+    expect(cell?.value).toBe("empty");
+  });
+
+  test("Cannot place battleship twice", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [3, 4], "horizontal", "battleship");
+    gameboard.placeShip(mockCreateShip, [1, 1], "horizontal", "battleship");
+    const cell =
+      gameboard.board.find(
+        (value) => value.coords[0] === 1 && value.coords[1] === 1
+      ) || null;
+    expect(cell?.value).toBe("empty");
+  });
+
+  test("Cannot place cruiser twice", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [3, 8], "horizontal", "cruiser");
+    gameboard.placeShip(mockCreateShip, [4, 2], "vertical", "cruiser");
+    const cell =
+      gameboard.board.find(
+        (value) => value.coords[0] === 4 && value.coords[1] === 2
+      ) || null;
+    expect(cell?.value).toBe("empty");
+  });
+
+  test("Cannot place submarine twice", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [9, 2], "vertical", "submarine");
+    gameboard.placeShip(mockCreateShip, [2, 5], "horizontal", "submarine");
+    const cell =
+      gameboard.board.find(
+        (value) => value.coords[0] === 2 && value.coords[1] === 5
+      ) || null;
+    expect(cell?.value).toBe("empty");
+  });
+
+  test("Cannot place destroyer twice", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [7, 0], "vertical", "destroyer");
+    gameboard.placeShip(mockCreateShip, [5, 5], "vertical", "destroyer");
+    const cell =
+      gameboard.board.find(
+        (value) => value.coords[0] === 5 && value.coords[1] === 5
+      ) || null;
+    expect(cell?.value).toBe("empty");
   });
 });

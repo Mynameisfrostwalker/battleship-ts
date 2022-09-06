@@ -41,6 +41,15 @@ button {
     outline: none;
 }
 
+.button {
+    @include mixins.size(120px, 30px);
+    @include mixins.color(theme.$player-label-color, theme.$player-input-color);
+
+    &:hover {
+        @include mixins.color(theme.$player-input-color, theme.$player-label-color);
+    }
+}
+
 footer {
     flex: 0 0 5vh;
     @include mixins.flex(row, center, center);
@@ -109,7 +118,7 @@ footer {
 
 .player-form {
     flex: 1 1 50%;
-    @include mixins.flex(column, center, space-around);
+    @include mixins.flex(column, center, space-evenly);
     @include mixins.position(relative);
     z-index: 100;
 
@@ -154,7 +163,8 @@ form {
         @include mixins.label-as-placeholder;
 
         label {
-            @include mixins.color(theme.$player-label-color)
+            @include mixins.color(theme.$player-label-color);
+            
         }
 
         input {
@@ -178,15 +188,6 @@ form {
             null,
             theme.$player-input-color, 
             );
-    }
-
-    .game-start-button {
-        @include mixins.size(120px, 30px);
-        @include mixins.color(theme.$player-label-color, theme.$player-input-color);
-
-        &:hover {
-            @include mixins.color(theme.$player-input-color, theme.$player-label-color);
-        }
     }
 
 }
@@ -224,9 +225,19 @@ form {
 }
 
 .game-main {
-    @include mixins.flex(row, center, space-around);
-    flex-wrap: wrap;
+    @include mixins.flex(column, center);
     flex: 1 1 85vh;
+
+    .button-section {
+        @include mixins.position(relative);
+        z-index: 100;
+    }
+}
+
+.board-container {
+    @include mixins.flex(row, null, space-around);
+    @include mixins.size(100%, null);
+    flex-wrap: wrap;
 
     .board-section {
         @include mixins.box-control(null, 20px);
@@ -295,6 +306,10 @@ form {
 
     .drag-over {
         border: dashed 3px red !important;
+    }
+
+    .drag-over-available {
+        border: dashed 3px green !important;
     }
     
     .ship-error {

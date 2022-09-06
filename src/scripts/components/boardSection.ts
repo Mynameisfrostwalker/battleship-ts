@@ -32,7 +32,7 @@ const createMain = (
       ...createBoardHeader(player.name),
       ...createBoardDisplay(player, type, playerPos),
     ],
-    createElement("div", ["boardSection", `${playerPos}-boardSection`]),
+    createElement("div", ["board-section", `${playerPos}-boardSection`]),
   ]);
 };
 
