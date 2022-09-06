@@ -5,7 +5,8 @@ import createButtonSection from "./buttonSection";
 import createBlob from "./blob";
 import { publish } from "../pubsub";
 
-const onFormSubmit = (form: HTMLElement) => {
+const onFormSubmit = (event: Event) => {
+  const form = event.currentTarget;
   const inputs: HTMLInputElement[] = [];
   if (form instanceof HTMLFormElement) {
     for (let i = 0; i < form.length; i += 1) {

@@ -6,8 +6,8 @@ import createBoardSection from "./boardSection";
 const createMain = (player1: Player | AIPlayer, player2: Player | AIPlayer) =>
   composeElements([
     [
-      ...createBoardSection(player1.name, player1.boardObj.board, player1.type),
-      ...createBoardSection(player2.name, player2.boardObj.board, player2.type),
+      ...createBoardSection(player1, "ship", "player1"),
+      ...createBoardSection(player2, "shipless", "player2"),
     ],
     createElement("main", ["game-main"]),
   ]);

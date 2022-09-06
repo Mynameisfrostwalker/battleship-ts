@@ -1,6 +1,7 @@
 import { composeElements, createElement } from "../domManipulator";
 
-const onCheckboxChange = (check: HTMLElement) => {
+const onCheckboxChange = (event: Event) => {
+  const check = event.currentTarget;
   if (check instanceof HTMLInputElement) {
     const div = check.parentElement?.previousElementSibling;
     const span = check.parentElement?.nextElementSibling;

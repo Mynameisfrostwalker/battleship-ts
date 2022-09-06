@@ -1,14 +1,12 @@
 import pirateImg from "../../assets/images/pirate.svg";
 import { composeElements, createElement } from "../domManipulator";
 
-const createPirateBoard = () =>
+const createPirateBoard = (
+  name = "Ahoy Cap'n, be ye ready to sail the seven seas with yer loyal crew?"
+) =>
   composeElements([
     [
-      createElement(
-        "h2",
-        ["form-header"],
-        "Ahoy Cap'n, be ye ready to sail the seven seas with yer loyal crew?"
-      ),
+      createElement("h2", ["form-header"], name),
       createElement("img", ["pirate-image"], null, null, [
         ["src", pirateImg],
         ["width", "8%"],

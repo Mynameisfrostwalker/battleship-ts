@@ -15,7 +15,7 @@ const createElement = (
   textContent?: string | null,
   id?: string | null,
   attributes?: [string, string][] | null,
-  eventListeners?: [string, (container: HTMLElement) => void][] | null
+  eventListeners?: [string, (event: Event) => void][] | null
 ) => {
   const container: HTMLElement = document.createElement(elementName);
 
@@ -37,12 +37,7 @@ const createElement = (
   }
   if (eventListeners) {
     eventListeners.forEach((eventListener) => {
-      const eventWrapper = (event: Event) => {
-        event.preventDefault();
-        eventListener[1](container);
-      };
-
-      container.addEventListener(eventListener[0], eventWrapper);
+      container.addEventListener(eventListener[0], eventListener[1]);
     });
   }
 

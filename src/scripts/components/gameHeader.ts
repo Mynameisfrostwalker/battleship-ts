@@ -6,7 +6,7 @@ const createHeader = () =>
   composeElements([
     [
       createElement("h1", ["battleship-header"], "Battleship"),
-      ...createPirateBoard(),
+      ...createPirateBoard("Place yer ships Cap'n!"),
       ...createVolumeDiv(),
     ],
     createElement("header", ["game-header"]),
