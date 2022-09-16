@@ -6,19 +6,27 @@ import createPlayer from "./player";
 interface AIPlayer {
   name: string;
   type: "AI";
+  playerNum: "player1" | "player2";
   boardObj: Gameboard;
   attackEnemy: (enemy: Gameboard) => void;
   initialPlace: (shipFunc: (name: ShipNames, axis: Axis) => Ship) => void;
 }
 
-const createAI = (boardFunc: BoardFunc): AIPlayer => {
+const createAI = (
+  boardFunc: BoardFunc,
+  playerNum: "player1" | "player2"
+): AIPlayer => {
   const coordsArr: [number, number][] = [];
   for (let i = 0; i < 10; i += 1) {
     for (let j = 0; j < 10; j += 1) {
       coordsArr.push([i, j]);
     }
   }
-  const { name, boardObj, attackEnemy: attack } = createPlayer(boardFunc, "AI");
+  const {
+    name,
+    boardObj,
+    attackEnemy: attack,
+  } = createPlayer(boardFunc, "AI", playerNum);
 
   const initialPlace = (shipFunc: (name: ShipNames, axis: Axis) => Ship) => {
     const ships: ShipNames[] = [
@@ -48,7 +56,7 @@ const createAI = (boardFunc: BoardFunc): AIPlayer => {
     attack(enemy, coords[0]);
   };
 
-  return { name, type: "AI", boardObj, attackEnemy, initialPlace };
+  return { name, playerNum, type: "AI", boardObj, attackEnemy, initialPlace };
 };
 
 export type { AIPlayer };

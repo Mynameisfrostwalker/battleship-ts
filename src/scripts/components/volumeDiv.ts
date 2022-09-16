@@ -1,6 +1,7 @@
 import { composeElements, createElement, fixElement } from "../domManipulator";
 
-const onVolumeChange = (div: HTMLElement) => {
+const onVolumeChange = (event: Event) => {
+  const div = event.currentTarget;
   const audio = document.querySelector(".ship-sailing");
   if (audio instanceof HTMLAudioElement && div instanceof HTMLElement) {
     if (div.classList.contains("not-play")) {

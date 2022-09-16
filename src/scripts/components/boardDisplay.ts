@@ -11,16 +11,15 @@ const ndxToLetter = (ndx: number) => {
   return String.fromCharCode(num + 65);
 };
 
-const createShiplessCell = (cell: Cell) =>
-  createElement("div", ["cell", "game-cell"], null, null, [
+const createShiplessCell = (cell: Cell, type = "empty") =>
+  createElement("div", ["cell", "game-cell", type], null, null, [
     ["data-x", `${cell.coords[0]}`],
     ["data-y", `${cell.coords[1]}`],
   ]);
 
 const createBoardDisplay = (
   player: Player | AIPlayer,
-  type: "ship" | "shipless",
-  playerPos: "player1" | "player2"
+  type: "ship" | "shipless"
 ) => {
   const elements: ChildFunc[] = [];
 
@@ -43,43 +42,54 @@ const createBoardDisplay = (
       );
     }
     if (cell.value === "empty") {
-      if (type === "ship") {
-        elements.push(createCell(cell, player, playerPos));
-      } else {
-        elements.push(createShiplessCell(cell));
-      }
+      const cellFunc =
+        type === "ship" ? createCell(cell, player) : createShiplessCell(cell);
+      elements.push(cellFunc);
+    } else if (cell.value === "hit") {
+      const cellFunc =
+        type === "ship"
+          ? createCell(cell, player, "hit")
+          : createShiplessCell(cell, "hit");
+      elements.push(cellFunc);
     } else if (cell.position !== 0) {
-      if (type === "ship") {
-        elements.push(createCell(cell, player, playerPos));
+      if (cell.value.get(cell.position) === "hit") {
+        const cellFunc =
+          type === "ship"
+            ? createCell(cell, player, "hit-ship")
+            : createShiplessCell(cell, "hit-ship");
+        elements.push(cellFunc);
       } else {
-        elements.push(createShiplessCell(cell));
+        const cellFunc =
+          type === "ship" ? createCell(cell, player) : createShiplessCell(cell);
+        elements.push(cellFunc);
       }
-    } else if (cell.value !== "hit") {
-      if (type === "ship") {
-        const shipName = cell.value.name;
-        const shipLength = cell.value.length;
-        const shipAxis = cell.value.axis;
+    } else {
+      const shipName = cell.value.name;
+      const shipLength = cell.value.length;
+      const shipAxis = cell.value.axis;
+      if (cell.value.get(cell.position) === "hit") {
         const func = () =>
           composeElements([
-            ...createShip(
-              shipName,
-              shipLength,
-              shipAxis,
-              player,
-              playerPos,
-              cell.coords
-            ),
-            createCell(cell, player, playerPos),
+            ...createShip(shipName, shipLength, shipAxis, player, cell.coords),
+            createCell(cell, player, "hit-ship"),
           ]);
-        elements.push(...func());
+        const cellFunc =
+          type === "ship" ? func() : [createShiplessCell(cell, "hit-ship")];
+        elements.push(...cellFunc);
       } else {
-        elements.push(createShiplessCell(cell));
+        const func = () =>
+          composeElements([
+            ...createShip(shipName, shipLength, shipAxis, player, cell.coords),
+            createCell(cell, player),
+          ]);
+        const cellFunc = type === "ship" ? func() : [createShiplessCell(cell)];
+        elements.push(...cellFunc);
       }
     }
   });
   return composeElements([
     elements,
-    createElement("div", ["gameboard", `${playerPos}-gameboard`]),
+    createElement("div", ["gameboard", `${player.playerNum}-gameboard`]),
   ]);
 };
 

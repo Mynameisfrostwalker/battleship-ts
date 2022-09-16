@@ -101,6 +101,10 @@ footer {
     margin-top: 10px;
 }
 
+.unclickable {
+    pointer-events: none;
+}
+
 .initial-header {
     flex: 0 0 10vh;
     @include mixins.flex(row, center, center);
@@ -248,6 +252,14 @@ form {
     $cell-size: calc(1rem + 1.5vw);
     @include mixins.grid(repeat(11, $cell-size), repeat(11, $cell-size));
     grid-auto-flow: column;
+
+    .hit-ship {
+        @include  mixins.color(null, red);
+    }
+
+    .hit {
+        @include  mixins.color(null, yellow);
+    }
 
     .cell {
         @include mixins.size($cell-size, $min: false);

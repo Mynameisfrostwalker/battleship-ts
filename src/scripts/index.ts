@@ -4,7 +4,7 @@ import type { Player } from "./player";
 import type { AIPlayer } from "./aiPlayer";
 import { subscribe } from "./pubsub";
 import initDisplay from "./initDisplay";
-import startGame from "./gameLoop";
+import { startGame } from "./gameLoop";
 import displayGame from "./gameDisplay";
 
 initDisplay();

@@ -17,7 +17,6 @@ const createShip = (
   shipLength: number,
   axis: "horizontal" | "vertical",
   player: Player | AIPlayer,
-  playerPos: "player1" | "player2",
   coords: [number, number]
 ) => {
   const changeAxis = (event: Event) => {
@@ -40,7 +39,7 @@ const createShip = (
           player.boardObj.placeShip(shipFunc, coords, "vertical", shipName);
           ship.classList.add("ship-error");
           setTimeout(() => {
-            publish(`${playerPos}-redisplay`);
+            publish("redisplay");
           }, 1000);
           return;
         }
@@ -61,13 +60,13 @@ const createShip = (
           player.boardObj.placeShip(shipFunc, coords, "horizontal", shipName);
           ship.classList.add("ship-error");
           setTimeout(() => {
-            publish(`${playerPos}-redisplay`);
+            publish("redisplay");
           }, 1000);
           return;
         }
       }
     }
-    publish(`${playerPos}-redisplay`);
+    publish("redisplay");
   };
 
   const dragStart = (event: Event) => {

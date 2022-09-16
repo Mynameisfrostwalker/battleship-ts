@@ -5,6 +5,7 @@ import type { Ship, ShipNames } from "./ship";
 interface Player {
   name: string;
   type: "Human";
+  playerNum: "player1" | "player2";
   boardObj: Gameboard;
   attackEnemy: (enemy: Gameboard, coords: [number, number]) => void;
   placeShip: (
@@ -19,7 +20,11 @@ interface Player {
 
 type BoardFunc = (board?: Cell[]) => Gameboard;
 
-const createPlayer = (boardFunc: BoardFunc, playerName: string): Player => {
+const createPlayer = (
+  boardFunc: BoardFunc,
+  playerName: string,
+  playerNum: "player1" | "player2"
+): Player => {
   const board = boardFunc();
 
   const attackEnemy = (enemy: Gameboard, coords: [number, number]) => {
@@ -64,6 +69,7 @@ const createPlayer = (boardFunc: BoardFunc, playerName: string): Player => {
   return {
     name: playerName,
     type: "Human",
+    playerNum,
     boardObj: board,
     attackEnemy,
     placeShip,

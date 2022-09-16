@@ -11,7 +11,7 @@ interface Ship {
   name: ShipNames;
   axis: "horizontal" | "vertical";
   length: number;
-  get(num?: number): ShipValues[] | ShipValues;
+  get(num?: number | null): ShipValues[] | ShipValues;
   hit(num: number): void;
   isSunk(): boolean;
 }
@@ -30,8 +30,8 @@ const createShip = (name: ShipNames, axis: "horizontal" | "vertical"): Ship => {
     shipArray.push(name);
   }
 
-  const get = (num?: number) =>
-    num !== undefined && num >= 0 && num < shipLengths[name]
+  const get = (num?: number | null) =>
+    num !== undefined && num !== null && num >= 0 && num < shipLengths[name]
       ? shipArray[num]
       : shipArray;
 

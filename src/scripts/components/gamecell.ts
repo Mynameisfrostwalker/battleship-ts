@@ -15,11 +15,7 @@ const isShipName = (name: string | null | undefined): name is ShipNames => {
   return names.includes(name || "");
 };
 
-const createCell = (
-  cell: Cell,
-  player: Player | AIPlayer,
-  playerPos: "player1" | "player2"
-) => {
+const createCell = (cell: Cell, player: Player | AIPlayer, type = "empty") => {
   const dragEnter = (event: Event) => {
     event.preventDefault();
     const targetCell = event.currentTarget;
@@ -96,7 +92,7 @@ const createCell = (
             .some((value) => value[0] === coords[0] && value[1] === coords[1])
         ) {
           player.boardObj.placeShip(createShip, coords, axis, name);
-          publish(`${playerPos}-redisplay`);
+          publish("redisplay");
         } else {
           targetCell.classList.remove("drag-over");
           targetCell.classList.remove("drag-over-available");
@@ -107,7 +103,7 @@ const createCell = (
 
   return createElement(
     "div",
-    ["cell", "game-cell"],
+    ["cell", "game-cell", type],
     null,
     null,
     [
