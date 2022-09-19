@@ -38,6 +38,12 @@ const createBeginGameButton = (
     if (playerBoard) {
       const cells = playerBoard.querySelectorAll(".game-cell");
       cells.forEach((cell) => {
+        if (
+          cell.classList.contains("hit") ||
+          cell.classList.contains("hit-ship")
+        ) {
+          return;
+        }
         cell.addEventListener("click", cellEvent);
       });
     }
@@ -51,6 +57,7 @@ const createBeginGameButton = (
         publish("redisplay");
         attachEvents();
       });
+      publish("pirate-text", "Fire when ready Cap'n!");
       button.remove();
     }
   };

@@ -33,6 +33,54 @@ const startGame = (player1Name: string, player2Name: string) => {
   }
 };
 
+const attackEvents = (
+  player: "AI" | "Human",
+  lasthit: [string, string] | null
+) => {
+  if (player === "Human") {
+    if (lasthit && lasthit[1] === "miss") {
+      publish("pirate-text", "Damn to the depths, we missed by a mile");
+      publish("explosion", () => {
+        publish("sploosh");
+      });
+    } else if (lasthit && lasthit[0] === "unsunk") {
+      publish("pirate-text", `Jolly 'eavens, we've 'it their ship!`);
+      publish("explosion", () => {
+        publish("shipHit");
+      });
+    } else if (lasthit && lasthit[0] === "sunk") {
+      publish(
+        "pirate-text",
+        `Amazin' Cap'n, their ${lasthit[1]} been down to Davy Jones' Locker!`
+      );
+      publish("explosion", () => {
+        publish("shipHit");
+      });
+    }
+  } else if (lasthit && lasthit[1] === "miss") {
+    publish(
+      "pirate-text",
+      "Fortune be smilin' upon us, they've missed our ships."
+    );
+    publish("explosion", () => {
+      publish("sploosh");
+    });
+  } else if (lasthit && lasthit[0] === "unsunk") {
+    publish("pirate-text", `Damn to the depths, they've 'it our ${lasthit[1]}`);
+    publish("explosion", () => {
+      publish("shipHit");
+    });
+  } else if (lasthit && lasthit[0] === "sunk") {
+    publish(
+      "pirate-text",
+      `Shiver me timbers, our ${lasthit[1]} gone down under`
+    );
+    publish("explosion", () => {
+      publish("shipHit");
+    });
+  }
+};
+
 const receiveAttackCoords1AI1Player = (
   coords: [number, number],
   player1: Player | AIPlayer,
@@ -40,27 +88,54 @@ const receiveAttackCoords1AI1Player = (
   playerPos: "player1" | "player2"
 ) => {
   const main = document.querySelector("main");
+  if (player1.boardObj.areAllSunk()) {
+    console.log("Player2 won!");
+    return;
+  }
+  if (player2.boardObj.areAllSunk()) {
+    console.log("Player1 won!");
+    return;
+  }
   if (playerPos === "player1") {
     player2.attackEnemy(player1.boardObj, coords);
     publish("redisplayAfterBegin");
+    attackEvents(player2.type, player1.boardObj.checkLastHit());
+
     setTimeout(() => {
+      if (player2.boardObj.areAllSunk()) {
+        console.log("Player1 won!");
+        return;
+      }
       if (player1.type === "AI" && main) {
         player1.attackEnemy(player2.boardObj);
         publish("redisplayAfterBegin");
-        main.classList.remove("unclickable");
+        attackEvents(player1.type, player2.boardObj.checkLastHit());
+        setTimeout(() => {
+          main.classList.remove("unclickable");
+        }, 2000);
       }
-    }, 1000);
+    }, 3000);
   }
+
   if (playerPos === "player2") {
     player1.attackEnemy(player2.boardObj, coords);
     publish("redisplayAfterBegin");
+    attackEvents(player1.type, player2.boardObj.checkLastHit());
+
     setTimeout(() => {
+      if (player1.boardObj.areAllSunk()) {
+        console.log("Player2 won!");
+        return;
+      }
       if (player2.type === "AI" && main) {
         player2.attackEnemy(player1.boardObj);
         publish("redisplayAfterBegin");
-        main.classList.remove("unclickable");
+        attackEvents(player2.type, player1.boardObj.checkLastHit());
+        setTimeout(() => {
+          main.classList.remove("unclickable");
+        }, 2000);
       }
-    }, 1000);
+    }, 3000);
   }
 };
 

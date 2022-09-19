@@ -5,6 +5,9 @@ import createHeader from "./gameHeader";
 import createMain from "./gameMain";
 import createFooter from "./footer";
 import sailingAudio from "./sailingAudio";
+import splooshAudio from "./splooshAudio";
+import explosionAudio from "./explosionAudio";
+import shipHitAudio from "./shipHitAudio";
 
 const createContainer = (
   player1: Player | AIPlayer,
@@ -16,6 +19,9 @@ const createContainer = (
       ...createMain(player1, player2),
       ...createFooter(),
       ...sailingAudio(),
+      ...splooshAudio(),
+      ...explosionAudio(),
+      ...shipHitAudio(),
     ],
     createElement("div", ["container", "game-container"]),
   ]);

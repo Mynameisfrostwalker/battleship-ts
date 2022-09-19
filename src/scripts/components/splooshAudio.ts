@@ -1,15 +1,14 @@
-import shipSailing from "../../assets/audio/sailing.mp3";
-import shipSailing2 from "../../assets/audio/sailing.ogg";
+import sploosh from "../../assets/audio/sploosh.mp3";
+import sploosh2 from "../../assets/audio/sploosh.ogg";
 import { composeElements, createElement } from "../domManipulator";
 import { subscribe } from "../pubsub";
 
-const sailingAudio = () => {
+const splooshAudio = () => {
   const playSound = () => {
     const div = document.querySelector(".volume-div-2");
-    const audio = document.querySelector(".ship-sailing");
+    const audio = document.querySelector(".sploosh");
     if (audio instanceof HTMLAudioElement && div instanceof HTMLElement) {
       if (div.classList.contains("play")) {
-        audio.volume = 0.2;
         audio
           .play()
           .then()
@@ -20,29 +19,21 @@ const sailingAudio = () => {
     }
   };
 
-  const pauseSound = () => {
-    const audio = document.querySelector(".ship-sailing");
-    if (audio instanceof HTMLAudioElement) {
-      audio.pause();
-    }
-  };
-
-  subscribe("sailing-play", playSound);
-  subscribe("sailing-pause", pauseSound);
+  subscribe("sploosh", playSound);
 
   return composeElements([
     [
       createElement("source", null, null, null, [
-        ["src", shipSailing],
+        ["src", sploosh],
         ["type", "audio/mpeg"],
       ]),
       createElement("source", null, null, null, [
-        ["src", shipSailing2],
+        ["src", sploosh2],
         ["type", "audio/ogg"],
       ]),
     ],
-    createElement("audio", ["ship-sailing"], null, null, [["loop", "true"]]),
+    createElement("audio", ["sploosh"], null, null),
   ]);
 };
 
-export default sailingAudio;
+export default splooshAudio;

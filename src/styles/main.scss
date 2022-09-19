@@ -133,7 +133,7 @@ footer {
     
         flex-wrap: wrap;
     
-        .form-header {
+        .pirate-text {
             @include mixins.font(calc(8px + 1vw), 500, "typewriter")
         }
     }
@@ -212,7 +212,7 @@ form {
     
         flex-wrap: wrap;
     
-        .form-header {
+        .pirate-text {
             @include mixins.font(calc(8px + 0.5vw), 500, "typewriter")
         }
     }

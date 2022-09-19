@@ -1038,3 +1038,72 @@ describe("Cannot place same ships twice", () => {
     expect(cell?.value).toBe("empty");
   });
 });
+
+describe("Last hit property is value of last hit cell", () => {
+  test("Works when no attack has occured", () => {
+    const gameboard = createGameboard();
+    expect(gameboard.checkLastHit()).toBeNull();
+  });
+
+  test("Works when no attack has occured but ship has been placed", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [7, 0], "vertical", "destroyer");
+    expect(gameboard.checkLastHit()).toBeNull();
+  });
+
+  test("Works when attack received on empty cell", () => {
+    const gameboard = createGameboard();
+    gameboard.receiveAttack([2, 4]);
+    expect(gameboard.checkLastHit()).toEqual(["unsunk", "miss"]);
+  });
+
+  test("Works when attack received on carrier", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [7, 0], "vertical", "carrier");
+    gameboard.receiveAttack([7, 0]);
+    expect(gameboard.checkLastHit()).toEqual(["unsunk", "carrier"]);
+  });
+
+  test("Works when attack received on battleship", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [2, 0], "horizontal", "battleship");
+    gameboard.receiveAttack([2, 0]);
+    expect(gameboard.checkLastHit()).toEqual(["unsunk", "battleship"]);
+  });
+
+  test("Works when attack received on cruiser", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [4, 4], "vertical", "cruiser");
+    gameboard.receiveAttack([4, 4]);
+    expect(gameboard.checkLastHit()).toEqual(["unsunk", "cruiser"]);
+  });
+
+  test("Works when attack received on submarine", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [5, 7], "vertical", "submarine");
+    gameboard.receiveAttack([5, 7]);
+    expect(gameboard.checkLastHit()).toEqual(["unsunk", "submarine"]);
+  });
+
+  test("Works when attack received on destroyer", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [4, 7], "horizontal", "destroyer");
+    gameboard.receiveAttack([4, 7]);
+    expect(gameboard.checkLastHit()).toEqual(["unsunk", "destroyer"]);
+  });
+
+  test("works on sunk ships", () => {
+    const mockCreateShip = jest.fn(createShip);
+    const gameboard = createGameboard();
+    gameboard.placeShip(mockCreateShip, [4, 7], "horizontal", "destroyer");
+    gameboard.receiveAttack([4, 7]);
+    gameboard.receiveAttack([5, 7]);
+    expect(gameboard.checkLastHit()).toEqual(["sunk", "destroyer"]);
+  });
+});

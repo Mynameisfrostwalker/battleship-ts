@@ -14,7 +14,7 @@ interface Gameboard {
     shipName: ShipNames
   ) => void;
   receiveAttack: (coords: [number, number]) => void;
-  areAllSunk: () => void;
+  areAllSunk: () => boolean;
   getAvailableCoords: (
     axis: Axis,
     shipName: ShipNames,
@@ -26,6 +26,7 @@ interface Gameboard {
     shipFunc: (name: ShipNames, axis: Axis) => Ship
   ) => [number, number][];
   removeShip: (shipName: ShipNames) => void;
+  checkLastHit: () => [string, string] | null;
 }
 
 const createGameboard = (board?: Cell[]): Gameboard => {
@@ -44,6 +45,8 @@ const createGameboard = (board?: Cell[]): Gameboard => {
     bottom: [0, 1],
     left: [-1, 0],
   };
+
+  let lasthit: [string, string] | null = null;
 
   let gameBoardArr: Cell[] = [];
 
@@ -179,10 +182,16 @@ const createGameboard = (board?: Cell[]): Gameboard => {
 
     if (cell?.value === "empty") {
       cell.value = "hit";
+      lasthit = ["unsunk", "miss"];
     }
 
     if (cell?.value !== "hit" && cell?.position !== null) {
       cell?.value.hit(cell?.position);
+      if (cell?.value.name) {
+        lasthit = cell.value.isSunk()
+          ? ["sunk", cell.value.name]
+          : ["unsunk", cell.value.name];
+      }
     }
   };
 
@@ -272,6 +281,8 @@ const createGameboard = (board?: Cell[]): Gameboard => {
     });
   };
 
+  const checkLastHit = () => lasthit;
+
   return {
     board: gameBoardArr,
     placeShip,
@@ -280,6 +291,7 @@ const createGameboard = (board?: Cell[]): Gameboard => {
     getAvailableCoords,
     getAIAvailableCoords,
     removeShip,
+    checkLastHit,
   };
 };
 

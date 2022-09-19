@@ -1,18 +1,17 @@
-import shipSailing from "../../assets/audio/sailing.mp3";
-import shipSailing2 from "../../assets/audio/sailing.ogg";
+import shipHit from "../../assets/audio/shipHit-new.mp3";
+import shipHit2 from "../../assets/audio/shipHit-new.ogg";
 import { composeElements, createElement } from "../domManipulator";
 import { subscribe } from "../pubsub";
 
-const sailingAudio = () => {
+const shipHitAudio = () => {
   const playSound = () => {
     const div = document.querySelector(".volume-div-2");
-    const audio = document.querySelector(".ship-sailing");
+    const audio = document.querySelector(".shipHit");
     if (audio instanceof HTMLAudioElement && div instanceof HTMLElement) {
       if (div.classList.contains("play")) {
-        audio.volume = 0.2;
         audio
           .play()
-          .then()
+          .then(() => console.log("hit"))
           .catch(() => {
             throw new Error("Audio failed to play");
           });
@@ -20,29 +19,21 @@ const sailingAudio = () => {
     }
   };
 
-  const pauseSound = () => {
-    const audio = document.querySelector(".ship-sailing");
-    if (audio instanceof HTMLAudioElement) {
-      audio.pause();
-    }
-  };
-
-  subscribe("sailing-play", playSound);
-  subscribe("sailing-pause", pauseSound);
+  subscribe("shipHit", playSound);
 
   return composeElements([
     [
       createElement("source", null, null, null, [
-        ["src", shipSailing],
+        ["src", shipHit],
         ["type", "audio/mpeg"],
       ]),
       createElement("source", null, null, null, [
-        ["src", shipSailing2],
+        ["src", shipHit2],
         ["type", "audio/ogg"],
       ]),
     ],
-    createElement("audio", ["ship-sailing"], null, null, [["loop", "true"]]),
+    createElement("audio", ["shipHit"], null, null),
   ]);
 };
 
-export default sailingAudio;
+export default shipHitAudio;

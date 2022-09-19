@@ -5,6 +5,7 @@ const onVolumeChange = (event: Event) => {
   const audio = document.querySelector(".ship-sailing");
   if (audio instanceof HTMLAudioElement && div instanceof HTMLElement) {
     if (div.classList.contains("not-play")) {
+      audio.volume = 0.2;
       audio
         .play()
         .then(() => {
@@ -15,17 +16,24 @@ const onVolumeChange = (event: Event) => {
           div.replaceChildren();
           fixElement(div, [createVolume()]);
           div.classList.remove("not-play");
+          div.classList.add("play");
         })
         .catch(() => {
           throw new Error("Audio failed to play");
         });
     } else {
-      audio.pause();
+      const audios = document.querySelectorAll("audio");
+      if (audios) {
+        audios.forEach((aud) => {
+          aud.pause();
+        });
+      }
       const createVolume = () =>
         composeElements([createElement("i", ["fa-solid", "fa-volume-xmark"])]);
       div.replaceChildren();
       fixElement(div, [createVolume()]);
       div.classList.add("not-play");
+      div.classList.remove("play");
     }
   }
 };
@@ -33,7 +41,7 @@ const onVolumeChange = (event: Event) => {
 const createVolumeDiv = () =>
   composeElements([
     createElement("i", ["fa-solid", "fa-volume-xmark"]),
-    createElement("div", ["not-play"], null, null, null, [
+    createElement("div", ["not-play", "volume-div-2"], null, null, null, [
       ["click", onVolumeChange],
     ]),
     createElement("div", ["volume-div"]),
