@@ -11,7 +11,7 @@ const shipHitAudio = () => {
       if (div.classList.contains("play")) {
         audio
           .play()
-          .then(() => console.log("hit"))
+          .then()
           .catch(() => {
             throw new Error("Audio failed to play");
           });

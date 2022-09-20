@@ -4,7 +4,7 @@ import createAI from "./aiPlayer";
 import createPlayer from "./player";
 import createGameboard from "./gameboard";
 import createShip from "./ship";
-import { publish, subscribe } from "./pubsub";
+import { publish } from "./pubsub";
 
 const startGame = (player1Name: string, player2Name: string) => {
   let player1: Player | AIPlayer = createPlayer(
@@ -88,22 +88,24 @@ const receiveAttackCoords1AI1Player = (
   playerPos: "player1" | "player2"
 ) => {
   const main = document.querySelector("main");
-  if (player1.boardObj.areAllSunk()) {
-    console.log("Player2 won!");
-    return;
-  }
-  if (player2.boardObj.areAllSunk()) {
-    console.log("Player1 won!");
-    return;
-  }
+
   if (playerPos === "player1") {
+    if (player1.boardObj.areAllSunk()) {
+      publish("game-over", "victory");
+      return;
+    }
+    if (player2.boardObj.areAllSunk()) {
+      publish("game-over", "defeat");
+      return;
+    }
+
     player2.attackEnemy(player1.boardObj, coords);
     publish("redisplayAfterBegin");
     attackEvents(player2.type, player1.boardObj.checkLastHit());
 
     setTimeout(() => {
-      if (player2.boardObj.areAllSunk()) {
-        console.log("Player1 won!");
+      if (player1.boardObj.areAllSunk()) {
+        publish("game-over", "victory");
         return;
       }
       if (player1.type === "AI" && main) {
@@ -118,13 +120,22 @@ const receiveAttackCoords1AI1Player = (
   }
 
   if (playerPos === "player2") {
+    if (player1.boardObj.areAllSunk()) {
+      publish("game-over", "defeat");
+      return;
+    }
+    if (player2.boardObj.areAllSunk()) {
+      publish("game-over", "victory");
+      return;
+    }
+
     player1.attackEnemy(player2.boardObj, coords);
     publish("redisplayAfterBegin");
     attackEvents(player1.type, player2.boardObj.checkLastHit());
 
     setTimeout(() => {
-      if (player1.boardObj.areAllSunk()) {
-        console.log("Player2 won!");
+      if (player2.boardObj.areAllSunk()) {
+        publish("game-over", "victory");
         return;
       }
       if (player2.type === "AI" && main) {
@@ -139,4 +150,17 @@ const receiveAttackCoords1AI1Player = (
   }
 };
 
-export { startGame, receiveAttackCoords1AI1Player };
+const AIstart = (player1: Player | AIPlayer, player2: Player | AIPlayer) => {
+  const main = document.querySelector("main");
+  if (player1.type === "AI" && main) {
+    player1.attackEnemy(player2.boardObj);
+    publish("redisplayAfterBegin");
+    attackEvents(player1.type, player2.boardObj.checkLastHit());
+    setTimeout(() => {
+      main.classList.remove("unclickable");
+    }, 2000);
+  }
+  publish("pirate-text", "Fire when ready Cap'n!");
+};
+
+export { startGame, receiveAttackCoords1AI1Player, AIstart };

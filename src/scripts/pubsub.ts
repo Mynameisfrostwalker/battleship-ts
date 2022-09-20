@@ -4,7 +4,7 @@ interface Events {
   [index: string]: Anyfunctions[];
 }
 
-const events: Events = {
+let events: Events = {
   // key: eventname, value: [funcs]
 };
 
@@ -33,4 +33,8 @@ const publish = (eventName: string, ...args: unknown[]): void => {
   }
 };
 
-export { publish, subscribe, unsubscribe };
+const clear = () => {
+  events = {};
+};
+
+export { publish, subscribe, unsubscribe, clear };

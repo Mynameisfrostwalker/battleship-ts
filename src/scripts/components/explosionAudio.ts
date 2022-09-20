@@ -9,7 +9,6 @@ const explosionAudio = () => {
     const audio = document.querySelector(".explosion");
     if (audio instanceof HTMLAudioElement && div instanceof HTMLElement) {
       if (div.classList.contains("play")) {
-        console.log(div.classList, div);
         const playAud = () => {
           callback();
           audio.removeEventListener("ended", playAud);

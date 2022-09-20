@@ -1,8 +1,7 @@
-import { mainModule } from "process";
 import type { Player } from "../player";
 import type { AIPlayer } from "../aiPlayer";
 import { composeElements, createElement } from "../domManipulator";
-import { receiveAttackCoords1AI1Player } from "../gameLoop";
+import { receiveAttackCoords1AI1Player, AIstart } from "../gameLoop";
 import { subscribe, publish } from "../pubsub";
 
 const createBeginGameButton = (
@@ -57,8 +56,11 @@ const createBeginGameButton = (
         publish("redisplay");
         attachEvents();
       });
-      publish("pirate-text", "Fire when ready Cap'n!");
       button.remove();
+      publish("pirate-text", "Fire when ready Cap'n!");
+      if (player1.type === "AI") {
+        AIstart(player1, player2);
+      }
     }
   };
 

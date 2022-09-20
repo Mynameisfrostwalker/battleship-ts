@@ -204,38 +204,44 @@ form {
     >h1 {
         @include mixins.font(calc(10px + 2vw), 500, "typewriter");
     }
-    
-    .pirate-inner-border {
-        @include mixins.flex(row, center, center);
-        @include mixins.color(theme.$pirate-inner-color, theme.$pirate-inner-bg);
-        @include mixins.box-control(null, 5px, null, 10%);
-    
-        flex-wrap: wrap;
-    
-        .pirate-text {
-            @include mixins.font(calc(8px + 0.5vw), 500, "typewriter")
-        }
-    }
-    
-    .pirate-outer-border {
-        @include mixins.color(null, theme.$pirate-outer-bg);
-        @include mixins.box-control(0px, 5px, null, 10%);
-        @include mixins.size(calc(10px + 50%), null, false);
-    }
 }
 
 .board-header {
     text-align: center;
 }
 
+.pirate-inner-border {
+    @include mixins.flex(row, center, center);
+    @include mixins.color(theme.$pirate-inner-color, theme.$pirate-inner-bg);
+    @include mixins.box-control(null, 5px, null, 10%);
+
+    flex-wrap: wrap;
+
+    .pirate-text {
+        @include mixins.font(calc(8px + 0.5vw), 500, "typewriter")
+    }
+}
+
+.pirate-outer-border {
+    @include mixins.color(null, theme.$pirate-outer-bg);
+    @include mixins.box-control(0px, 5px, null, 10%);
+    @include mixins.size(calc(10px + 50%), null, false);
+}
+
 .game-main {
     @include mixins.flex(column, center);
     flex: 1 1 85vh;
+}
 
-    .button-section {
-        @include mixins.position(relative);
-        z-index: 100;
-    }
+.button-section {
+    @include mixins.position(relative);
+    z-index: 100;
+}
+
+.gameOver-main {
+    @include mixins.flex(column, center, space-around);
+    flex: 1 1 85vh;
+
 }
 
 .board-container {

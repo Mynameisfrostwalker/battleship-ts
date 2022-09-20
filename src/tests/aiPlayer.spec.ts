@@ -60,6 +60,45 @@ describe("Testing attackEnemy method", () => {
   });
 });
 
+describe("Testing intelligent attackEnemy method", () => {
+  beforeEach(() => {
+    jest
+      .spyOn(global.Math, "random")
+      .mockReturnValueOnce(0)
+      .mockReturnValueOnce(0.6)
+      .mockReturnValue(0);
+  });
+
+  afterEach(() => {
+    jest.spyOn(global.Math, "random").mockRestore();
+  });
+
+  test("AttackEnemy method works (1)", () => {
+    let consecutive = false;
+    const mockGameboard = jest.fn(createGameboard);
+    const enemyBoard = mockGameboard();
+    enemyBoard.placeShip(createShip, [0, 0], "horizontal", "destroyer");
+    const enemySpy = jest.spyOn(enemyBoard, "receiveAttack");
+    const AI = createAI(mockGameboard, "player2");
+    AI.attackEnemy(enemyBoard);
+    const firstCoord = enemySpy.mock.calls[0][0][0];
+    const secondCoord = enemySpy.mock.calls[0][0][1];
+    AI.attackEnemy(enemyBoard);
+    const thirdCoord = enemySpy.mock.calls[1][0][0];
+    const fourthCoord = enemySpy.mock.calls[1][0][1];
+    console.log(firstCoord, secondCoord, thirdCoord, fourthCoord);
+    if (
+      (firstCoord === thirdCoord &&
+        (secondCoord === fourthCoord + 1 || secondCoord === fourthCoord - 1)) ||
+      (secondCoord === fourthCoord &&
+        (firstCoord === thirdCoord + 1 || firstCoord === thirdCoord - 1))
+    ) {
+      consecutive = true;
+    }
+    expect(consecutive).toBe(true);
+  });
+});
+
 describe("Initial place method works", () => {
   beforeEach(() => {
     jest

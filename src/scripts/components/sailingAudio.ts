@@ -41,7 +41,9 @@ const sailingAudio = () => {
         ["type", "audio/ogg"],
       ]),
     ],
-    createElement("audio", ["ship-sailing"], null, null, [["loop", "true"]]),
+    createElement("audio", ["ship-sailing", "current-audio"], null, null, [
+      ["loop", "true"],
+    ]),
   ]);
 };
 
