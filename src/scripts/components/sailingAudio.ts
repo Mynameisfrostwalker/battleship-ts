@@ -5,9 +5,11 @@ import { subscribe } from "../pubsub";
 
 const sailingAudio = () => {
   const playSound = () => {
+    console.log("beep");
     const div = document.querySelector(".volume-div-2");
     const audio = document.querySelector(".ship-sailing");
     if (audio instanceof HTMLAudioElement && div instanceof HTMLElement) {
+      console.log("beep");
       if (div.classList.contains("play")) {
         audio.volume = 0.2;
         audio
