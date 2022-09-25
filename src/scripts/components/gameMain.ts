@@ -9,8 +9,14 @@ const createMain = (player1: Player | AIPlayer, player2: Player | AIPlayer) => {
   const reDisplayBoard = () => {
     const component = composeElements([
       [
-        ...createBoardSection(player1, player1.type === "AI" ? "ship" : "ship"),
-        ...createBoardSection(player2, player2.type === "AI" ? "ship" : "ship"),
+        ...createBoardSection(
+          player1,
+          player1.type === "AI" ? "shipless" : "ship"
+        ),
+        ...createBoardSection(
+          player2,
+          player2.type === "AI" ? "shipless" : "ship"
+        ),
       ],
     ]);
 
@@ -28,11 +34,11 @@ const createMain = (player1: Player | AIPlayer, player2: Player | AIPlayer) => {
         [
           ...createBoardSection(
             player1,
-            player1.type === "AI" ? "ship" : "ship"
+            player1.type === "AI" ? "shipless" : "ship"
           ),
           ...createBoardSection(
             player2,
-            player2.type === "AI" ? "ship" : "ship"
+            player2.type === "AI" ? "shipless" : "ship"
           ),
         ],
         createElement("div", ["board-container"]),
