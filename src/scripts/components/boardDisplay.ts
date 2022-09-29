@@ -67,7 +67,14 @@ const createBoardDisplay = (
       const shipName = cell.value.name;
       const shipLength = cell.value.length;
       const shipAxis = cell.value.axis;
-      if (cell.value.get(cell.position) === "hit") {
+      if (cell.value.isSunk()) {
+        const func = () =>
+          composeElements([
+            ...createShip(shipName, shipLength, shipAxis, player, cell.coords),
+            createCell(cell, player, "hit-ship"),
+          ]);
+        elements.push(...func());
+      } else if (cell.value.get(cell.position) === "hit") {
         const func = () =>
           composeElements([
             ...createShip(shipName, shipLength, shipAxis, player, cell.coords),
