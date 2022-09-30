@@ -17,8 +17,12 @@ const createAI = (
   boardFunc: BoardFunc,
   playerNum: "player1" | "player2"
 ): AIPlayer => {
-  let lastHit: Cell | null = null;
-  const closeCells: Cell[] = [];
+  let lastHit: [Cell | null, "vertical" | "horizontal" | "both"] = [
+    null,
+    "both",
+  ];
+  let direction: "vertical" | "horizontal" | "both" = "both";
+  let closeCells: [Cell, "vertical" | "horizontal" | "both"][] = [];
 
   let coordsArr: [number, number][] = [];
   for (let i = 0; i < 10; i += 1) {
@@ -56,68 +60,90 @@ const createAI = (
 
   const attackEnemy = (enemy: Gameboard) => {
     if (
-      lastHit &&
-      lastHit?.value !== "hit" &&
-      lastHit?.value !== "empty" &&
-      lastHit?.value.get(lastHit.position) === "hit"
+      lastHit[0] &&
+      lastHit[0]?.value !== "hit" &&
+      lastHit[0]?.value !== "empty" &&
+      lastHit[0]?.value.get(lastHit[0].position) === "hit"
     ) {
       if (
-        lastHit.left &&
+        lastHit[0].left &&
         coordsArr.some(
           (coords) =>
-            lastHit?.left?.coords[0] === coords[0] &&
-            lastHit?.left?.coords[1] === coords[1]
-        )
+            lastHit[0]?.left?.coords[0] === coords[0] &&
+            lastHit[0]?.left?.coords[1] === coords[1]
+        ) &&
+        (lastHit[1] === "both" || lastHit[1] === "horizontal")
       ) {
-        closeCells.push(lastHit.left);
+        closeCells.push([lastHit[0].left, "horizontal"]);
       }
       if (
-        lastHit.right &&
+        lastHit[0].right &&
         coordsArr.some(
           (coords) =>
-            lastHit?.right?.coords[0] === coords[0] &&
-            lastHit?.right?.coords[1] === coords[1]
-        )
+            lastHit[0]?.right?.coords[0] === coords[0] &&
+            lastHit[0]?.right?.coords[1] === coords[1]
+        ) &&
+        (lastHit[1] === "both" || lastHit[1] === "horizontal")
       ) {
-        closeCells.push(lastHit.right);
+        closeCells.push([lastHit[0].right, "horizontal"]);
       }
       if (
-        lastHit.top &&
+        lastHit[0].top &&
         coordsArr.some(
           (coords) =>
-            lastHit?.top?.coords[0] === coords[0] &&
-            lastHit?.top?.coords[1] === coords[1]
-        )
+            lastHit[0]?.top?.coords[0] === coords[0] &&
+            lastHit[0]?.top?.coords[1] === coords[1]
+        ) &&
+        (lastHit[1] === "both" || lastHit[1] === "vertical")
       ) {
-        closeCells.push(lastHit.top);
+        closeCells.push([lastHit[0].top, "vertical"]);
       }
       if (
-        lastHit.bottom &&
+        lastHit[0].bottom &&
         coordsArr.some(
           (coords) =>
-            lastHit?.bottom?.coords[0] === coords[0] &&
-            lastHit?.bottom?.coords[1] === coords[1]
-        )
+            lastHit[0]?.bottom?.coords[0] === coords[0] &&
+            lastHit[0]?.bottom?.coords[1] === coords[1]
+        ) &&
+        (lastHit[1] === "both" || lastHit[1] === "vertical")
       ) {
-        closeCells.push(lastHit.bottom);
+        closeCells.push([lastHit[0].bottom, "vertical"]);
       }
 
-      lastHit = null;
+      // lastHit = [null, "both"];
     }
     if (closeCells.length > 0) {
-      attack(enemy, closeCells[0].coords);
+      if (lastHit[1] === "vertical") {
+        closeCells = closeCells.filter((val) => val[1] !== "horizontal");
+      }
+      if (lastHit[1] === "horizontal") {
+        closeCells = closeCells.filter((val) => val[1] !== "vertical");
+      }
+      attack(enemy, closeCells[0][0].coords);
+      let cellToHit: Cell;
+      const [arr] = closeCells;
+      [cellToHit, direction] = arr;
       const hitCell =
         enemy.board.find(
           (cell) =>
-            cell.coords[0] === closeCells[0].coords[0] &&
-            cell.coords[1] === closeCells[0].coords[1]
+            cell.coords[0] === closeCells[0][0].coords[0] &&
+            cell.coords[1] === closeCells[0][0].coords[1]
         ) || null;
-      lastHit = hitCell;
+      if (
+        hitCell &&
+        hitCell?.value !== "hit" &&
+        hitCell?.value !== "empty" &&
+        hitCell?.value.get(hitCell.position) === "hit"
+      ) {
+        lastHit = [hitCell, direction];
+      } else {
+        lastHit = [hitCell, "both"];
+      }
       coordsArr = coordsArr.filter(
         (coords) =>
           !(
-            closeCells[0].coords[0] === coords[0] &&
-            closeCells[0].coords[1] === coords[1]
+            closeCells[0][0].coords[0] === coords[0] &&
+            closeCells[0][0].coords[1] === coords[1]
           )
       );
       closeCells.shift();
@@ -131,7 +157,7 @@ const createAI = (
         (cell) =>
           cell.coords[0] === coords[0][0] && cell.coords[1] === coords[0][1]
       ) || null;
-    lastHit = hitCell;
+    lastHit = [hitCell, "both"];
   };
 
   return { name, playerNum, type: "AI", boardObj, attackEnemy, initialPlace };
