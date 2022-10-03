@@ -11,7 +11,7 @@ const createContainer = (endMessage: string, status: string) =>
       ...createHeader(),
       ...createMain(endMessage),
       ...createFooter(),
-      ...(status === "victory" ? victoryAudio() : defeatAudio()),
+      ...(status === "defeat" ? defeatAudio() : victoryAudio()),
     ],
     createElement("div", ["container", "container-home"]),
   ]);

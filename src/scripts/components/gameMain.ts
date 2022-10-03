@@ -6,8 +6,16 @@ import createBoardSection from "./boardSection";
 import beginGameButton from "./beginGameButton";
 
 const createMain = (player1: Player | AIPlayer, player2: Player | AIPlayer) => {
-  const boardSections = () =>
-    composeElements([
+  const boardSections = () => {
+    if (player1.type === "AI" && player2.type === "AI") {
+      return composeElements([
+        [
+          ...createBoardSection(player1, "ship"),
+          ...createBoardSection(player2, "ship"),
+        ],
+      ]);
+    }
+    return composeElements([
       [
         ...createBoardSection(
           player1,
@@ -19,6 +27,21 @@ const createMain = (player1: Player | AIPlayer, player2: Player | AIPlayer) => {
         ),
       ],
     ]);
+  };
+
+  const button = () => {
+    if (
+      (player1.type === "Human" && player2.type === "AI") ||
+      (player1.type === "AI" && player2.type === "Human")
+    ) {
+      return beginGameButton(
+        player1.type === "AI" ? "player1" : "player2",
+        player1,
+        player2
+      );
+    }
+    return [];
+  };
 
   const reDisplayBoard = () => {
     const component = boardSections();
@@ -37,11 +60,7 @@ const createMain = (player1: Player | AIPlayer, player2: Player | AIPlayer) => {
         boardSections(),
         createElement("div", ["board-container"]),
       ]),
-      ...beginGameButton(
-        player1.type === "AI" ? "player1" : "player2",
-        player1,
-        player2
-      ),
+      ...button(),
     ],
     createElement("main", ["game-main"]),
   ]);

@@ -6,7 +6,14 @@ import createBoardHeader from "./boardHeader";
 
 const createMain = (player: Player | AIPlayer, type: "ship" | "shipless") =>
   composeElements([
-    [...createBoardHeader(player.name), ...createBoardDisplay(player, type)],
+    [
+      ...createBoardHeader(
+        player.type === "AI" && player.playerNum === "player2"
+          ? "AI2"
+          : player.name
+      ),
+      ...createBoardDisplay(player, type),
+    ],
     createElement("div", ["board-section", `${player.playerNum}-boardSection`]),
   ]);
 

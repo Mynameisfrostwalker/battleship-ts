@@ -6,14 +6,18 @@ const displayGameOver = (status: string) => {
   const body = document.querySelector("body");
   if (body) {
     const volumeDiv2 = document.querySelector(".volume-div-2");
-    fixElement(body, [
-      createContainer(
-        status === "victory"
-          ? "Cap'n, the treasures o' the Caribbean sea are ours!"
-          : "The English navy 'as surrounded us. Cap'n, we 'ad a jolly run. At least we die as gentlemen o' fortune.",
-        status
-      ),
-    ]);
+    if (status === "victory" || status === "defeat") {
+      fixElement(body, [
+        createContainer(
+          status === "victory"
+            ? "Cap'n, the treasures o' the Caribbean sea are ours!"
+            : "The English navy 'as surrounded us. Cap'n, we 'ad a jolly run. At least we die as gentlemen o' fortune.",
+          status
+        ),
+      ]);
+    } else {
+      fixElement(body, [createContainer(status, status)]);
+    }
     if (volumeDiv2 && volumeDiv2.classList.contains("play")) {
       const div = document.querySelector(".volume-div-2");
       if (div instanceof HTMLElement) {
@@ -23,7 +27,9 @@ const displayGameOver = (status: string) => {
         fixElement(div, [createVolume()]);
         div.classList.add("play");
         div.classList.remove("not-play");
-        publish(status);
+        publish(
+          status === "victory" || status === "defeat" ? status : "victory"
+        );
       }
     }
   }

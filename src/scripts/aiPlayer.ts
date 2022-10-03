@@ -109,8 +109,6 @@ const createAI = (
       ) {
         closeCells.push([lastHit[0].bottom, "vertical"]);
       }
-
-      // lastHit = [null, "both"];
     }
     if (closeCells.length > 0) {
       if (lastHit[1] === "vertical") {
