@@ -21,7 +21,9 @@ const createShip = (
 ) => {
   const changeAxis = (event: Event) => {
     const ship = event.currentTarget;
-    if (ship instanceof HTMLElement && isShipName(shipName)) {
+    const main = document.querySelector("main");
+    if (ship instanceof HTMLElement && isShipName(shipName) && main) {
+      main.classList.add("unclickable");
       if (ship.classList.contains("vertical")) {
         player.boardObj.removeShip(shipName);
         const coordinates = player.boardObj.getAvailableCoords(
@@ -40,6 +42,7 @@ const createShip = (
           ship.classList.add("ship-error");
           setTimeout(() => {
             publish("redisplay");
+            main.classList.remove("unclickable");
           }, 1000);
           return;
         }
@@ -61,10 +64,12 @@ const createShip = (
           ship.classList.add("ship-error");
           setTimeout(() => {
             publish("redisplay");
+            main.classList.remove("unclickable");
           }, 1000);
           return;
         }
       }
+      main.classList.remove("unclickable");
     }
     publish("redisplay");
   };

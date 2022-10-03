@@ -229,7 +229,7 @@ form {
 }
 
 .game-main {
-    @include mixins.flex(column, center);
+    @include mixins.flex(column, center, space-around);
     flex: 1 1 85vh;
 }
 
@@ -345,4 +345,11 @@ form {
         }
     }
 
+}
+
+.pass-screen {
+    @include mixins.font(calc(8px + 2vw), 500, "typewriter");
+    @include mixins.flex(row, center, center);
+    @include mixins.size(100%, 100%);
+    text-align: center;
 }

@@ -196,6 +196,74 @@ const AIstart = (player1: Player | AIPlayer, player2: Player | AIPlayer) => {
   publish("pirate-text", "Fire when ready Cap'n!");
 };
 
+const receiveAttackCoords2Player = (
+  coords: [number, number],
+  player1: Player | AIPlayer,
+  player2: Player | AIPlayer,
+  playerPos: "player1" | "player2"
+) => {
+  const main = document.querySelector("main");
+
+  if (playerPos === "player1") {
+    if (player1.boardObj.areAllSunk()) {
+      publish(
+        "game-over",
+        `${player2.name} beat ${player1.name}, ${player2.name} is the king of the carribean sea!`
+      );
+      return;
+    }
+    if (player2.boardObj.areAllSunk()) {
+      publish(
+        "game-over",
+        `${player1.name} beat ${player2.name}, ${player1.name} is the king of the carribean sea!`
+      );
+      return;
+    }
+
+    player2.attackEnemy(player1.boardObj, coords);
+    publish("redisplayAfterBegin");
+    attackEvents(player2.type, player1.boardObj.checkLastHit());
+  }
+
+  if (playerPos === "player2") {
+    if (player1.boardObj.areAllSunk()) {
+      publish("game-over", "defeat");
+      return;
+    }
+    if (player2.boardObj.areAllSunk()) {
+      publish("game-over", "victory");
+      return;
+    }
+
+    player1.attackEnemy(player2.boardObj, coords);
+    publish("redisplayAfterBegin");
+    attackEvents(player1.type, player2.boardObj.checkLastHit());
+  }
+
+  if (player1.boardObj.areAllSunk()) {
+    publish(
+      "game-over",
+      `${player2.name} beat ${player1.name}, ${player2.name} is the king of the carribean sea!`
+    );
+  } else if (player2.boardObj.areAllSunk()) {
+    publish(
+      "game-over",
+      `${player1.name} beat ${player2.name}, ${player1.name} is the king of the carribean sea!`
+    );
+  } else {
+    setTimeout(() => {
+      if (main) {
+        publish("pass-screenBegin");
+        setTimeout(() => {
+          publish("redisplayAfterBegin");
+          publish("pirate-text", "Fire when ready Cap'n!");
+          main.classList.remove("unclickable");
+        }, 6000);
+      }
+    }, 2000);
+  }
+};
+
 const startAIonly = (
   player1: Player | AIPlayer,
   player2: Player | AIPlayer
@@ -234,4 +302,9 @@ const startGame = (player1Name: string, player2Name: string) => {
   }
 };
 
-export { startGame, receiveAttackCoords1AI1Player, AIstart };
+export {
+  startGame,
+  receiveAttackCoords1AI1Player,
+  receiveAttackCoords2Player,
+  AIstart,
+};

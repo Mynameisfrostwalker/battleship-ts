@@ -1,7 +1,11 @@
 import type { Player } from "../player";
 import type { AIPlayer } from "../aiPlayer";
 import { composeElements, createElement } from "../domManipulator";
-import { receiveAttackCoords1AI1Player, AIstart } from "../gameLoop";
+import {
+  receiveAttackCoords1AI1Player,
+  receiveAttackCoords2Player,
+  AIstart,
+} from "../gameLoop";
 import { subscribe, publish } from "../pubsub";
 
 const createBeginGameButton = (
@@ -11,17 +15,32 @@ const createBeginGameButton = (
 ) => {
   const cellEvent = (e: Event) => {
     const main = document.querySelector("main");
+    const gameboard = document.querySelector(".turn-gameboard");
     const obj = e.target;
-    if (obj instanceof HTMLElement && main) {
+    if (
+      obj instanceof HTMLElement &&
+      main &&
+      gameboard instanceof HTMLElement
+    ) {
       const x = obj.getAttribute("data-x");
       const y = obj.getAttribute("data-y");
-      if (x && y) {
-        receiveAttackCoords1AI1Player(
-          [parseInt(x, 10), parseInt(y, 10)],
-          player1,
-          player2,
-          playerPos
-        );
+      const position = gameboard.getAttribute("data-position");
+      if (x && y && position) {
+        if (player1.type === "Human" && player2.type === "Human") {
+          receiveAttackCoords2Player(
+            [parseInt(x, 10), parseInt(y, 10)],
+            player1,
+            player2,
+            position === "player1" ? "player1" : "player2"
+          );
+        } else {
+          receiveAttackCoords1AI1Player(
+            [parseInt(x, 10), parseInt(y, 10)],
+            player1,
+            player2,
+            playerPos
+          );
+        }
         obj.removeEventListener("click", cellEvent);
         main.classList.add("unclickable");
       }
@@ -33,7 +52,7 @@ const createBeginGameButton = (
     ships.forEach((ship) => {
       ship.classList.add("unclickable");
     });
-    const playerBoard = document.querySelector(`.${playerPos}-gameboard`);
+    const playerBoard = document.querySelector(`.turn-gameboard`);
     if (playerBoard) {
       const cells = playerBoard.querySelectorAll(".game-cell");
       cells.forEach((cell) => {
@@ -58,6 +77,12 @@ const createBeginGameButton = (
       });
       button.remove();
       publish("pirate-text", "Fire when ready Cap'n!");
+      if (player1.type === "Human" && player2.type === "Human") {
+        publish("pass-screenBegin");
+        setTimeout(() => {
+          publish("redisplayAfterBegin");
+        }, 6000);
+      }
       if (player1.type === "AI") {
         AIstart(player1, player2);
       }

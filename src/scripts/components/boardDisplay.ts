@@ -19,7 +19,8 @@ const createShiplessCell = (cell: Cell, type = "empty") =>
 
 const createBoardDisplay = (
   player: Player | AIPlayer,
-  type: "ship" | "shipless"
+  type: "ship" | "shipless",
+  turn: string
 ) => {
   const elements: ChildFunc[] = [];
 
@@ -96,7 +97,13 @@ const createBoardDisplay = (
   });
   return composeElements([
     elements,
-    createElement("div", ["gameboard", `${player.playerNum}-gameboard`]),
+    createElement(
+      "div",
+      ["gameboard", `${player.playerNum}-gameboard`, `${turn}-gameboard`],
+      null,
+      null,
+      [["data-position", player.playerNum]]
+    ),
   ]);
 };
 

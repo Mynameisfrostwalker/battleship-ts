@@ -4,7 +4,11 @@ import { composeElements, createElement } from "../domManipulator";
 import createBoardDisplay from "./boardDisplay";
 import createBoardHeader from "./boardHeader";
 
-const createMain = (player: Player | AIPlayer, type: "ship" | "shipless") =>
+const createMain = (
+  player: Player | AIPlayer,
+  type: "ship" | "shipless",
+  turn: string
+) =>
   composeElements([
     [
       ...createBoardHeader(
@@ -12,7 +16,7 @@ const createMain = (player: Player | AIPlayer, type: "ship" | "shipless") =>
           ? "AI2"
           : player.name
       ),
-      ...createBoardDisplay(player, type),
+      ...createBoardDisplay(player, type, turn),
     ],
     createElement("div", ["board-section", `${player.playerNum}-boardSection`]),
   ]);
